@@ -3,9 +3,9 @@ spring:
     name: admin-web
 
 server:
-  port: 8762
+  port: 20730
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:20725/eureka/
