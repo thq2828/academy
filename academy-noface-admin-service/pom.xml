@@ -12,9 +12,9 @@
     <artifactId>academy-noface-admin-service</artifactId>
 <dependencies>
     <dependency>
-            <artifactId>academy-noface-core</artifactId>
-            <groupId>com.jnshu.academy</groupId>
-            <version>1.0-SNAPSHOT</version>
+        <groupId>com.jnshu</groupId>
+        <artifactId>academy-noface-core</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
