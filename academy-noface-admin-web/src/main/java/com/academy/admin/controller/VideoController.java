@@ -3,7 +3,6 @@ package com.academy.admin.controller;
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.Teacher;
 import com.academy.core.pojo.Video;
-import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,11 +27,6 @@ public class VideoController {
                              @RequestParam(value = "teacherName", required = false) Integer teacherName,
                              @RequestParam(value = "status", required = false) String status) {
         Video video = new Video();
-        PageInfo<Video> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(page);
-        pageInfo.setPageSize(size);
-        pageInfo.setPages(1);
-        pageInfo.setTotal(9);
 
         video.setId(1L);
         video.setTitle("葫芦娃全集");
@@ -55,9 +49,8 @@ public class VideoController {
         for(int i = 0; i < 10; i++) {
             videoList.add(video);
         }
-        pageInfo.setList(videoList);
 
-        return new Response<>(0, "success", pageInfo);
+        return new Response<>(0, "success", videoList);
     }
 
     /**

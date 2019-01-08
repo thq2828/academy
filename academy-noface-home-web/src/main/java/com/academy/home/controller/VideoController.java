@@ -15,43 +15,37 @@ public class VideoController {
     /**
      * 视频列表
      */
-//    @GetMapping("/a/u/video/card")
-//    public Response findList(@RequestParam(value = "page") Integer page,
-//                             @RequestParam(value = "size") Integer size,
-//                             @RequestParam(value = "grade") Integer grade,
-//                             @RequestParam(value = "subject") Integer subject) {
-//        Video video = new Video();
-//        PageInfo<Video> pageInfo = new PageInfo<>();
-//        pageInfo.setPageNum(page);
-//        pageInfo.setPageSize(size);
-//        pageInfo.setPages(1);
-//        pageInfo.setTotal(9);
-//
-//        video.setId(1L);
-//        video.setTitle("葫芦娃全集");
-//        video.setType(1);
-//        video.setGrade(3);
-//        video.setSubject(4);
-//        video.setIntro("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//        video.setContent("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-//        video.setUrl("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4");
-//        video.setTeacherId(1L);
-//        video.setTeacherNick("苍老师");
-//        video.setTeacherPic("http://thirdwx.qlogo.cn/mmopen/vi_32/kaCCtnsmXico9mEWKmTKeZpjibLLchNe5TTF7b9IoAAeqQoP1BnRpDuukr1DsVnFXm1zzM2tWRck8biaMUffh2DPg/132");
-//        video.setStatus(1);
-//        video.setCollect(200);
-//        video.setLike(888);
-//        video.setCollectStatus(1);
-//        video.setLikeStatus(1);
-//
-//        List<Video> videoList = new ArrayList<>();
-//        for(int i = 0; i < 10; i++) {
-//            videoList.add(video);
-//        }
-//        pageInfo.setList(videoList);
-//
-//        return new Response<>(0, "success", pageInfo);
-//    }
+    @GetMapping("/a/u/video/card")
+    public Response findList(@RequestParam(value = "page") Integer page,
+                             @RequestParam(value = "size") Integer size,
+                             @RequestParam(value = "grade") Integer grade,
+                             @RequestParam(value = "subject") Integer subject) {
+        Video video = new Video();
+
+        video.setId(1L);
+        video.setTitle("葫芦娃全集");
+        video.setType(1);
+        video.setGrade(3);
+        video.setSubject(4);
+        video.setIntro("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        video.setContent("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        video.setUrl("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4");
+        video.setTeacherId(1L);
+        video.setTeacherNick("苍老师");
+        video.setTeacherPic("http://thirdwx.qlogo.cn/mmopen/vi_32/kaCCtnsmXico9mEWKmTKeZpjibLLchNe5TTF7b9IoAAeqQoP1BnRpDuukr1DsVnFXm1zzM2tWRck8biaMUffh2DPg/132");
+        video.setStatus(1);
+        video.setCollect(200);
+        video.setLike(888);
+        video.setCollectStatus(1);
+        video.setLikeStatus(1);
+
+        List<Video> videoList = new ArrayList<>();
+        for(int i = 0; i < 10; i++) {
+            videoList.add(video);
+        }
+
+        return new Response<>(0, "success", videoList);
+    }
 
     /**
      * Banner列表

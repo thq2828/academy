@@ -2,7 +2,6 @@ package com.academy.admin.controller;
 
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.User;
-import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,18 +35,12 @@ public class UserController {
         user.setStatus(1);
         user.setAddress("北京朝阳");
 
-        PageInfo<User> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(page);
-        pageInfo.setPageSize(size);
-        pageInfo.setPages(1);
-        pageInfo.setTotal(9);
 
         List<User> userList = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
             userList.add(user);
         }
-        pageInfo.setList(userList);
-        return new Response<>(0, "success", pageInfo);
+        return new Response<>(0, "success", userList);
     }
 
     /**
