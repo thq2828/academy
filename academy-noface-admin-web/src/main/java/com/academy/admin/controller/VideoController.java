@@ -14,7 +14,7 @@ public class VideoController {
     /**
      * 视频列表
      */
-    @GetMapping("/a/u/video/list")
+        @GetMapping("/a/u/video/list")
     public Response findList(@RequestParam(value = "page") Integer page,
                              @RequestParam(value = "size") Integer size,
                              @RequestParam(value = "title", required = false) Integer title,

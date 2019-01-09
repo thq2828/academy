@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.academy.user.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.academy.core.pojo.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="open_id" jdbcType="VARCHAR" property="openId" />
+        <result column="nick" jdbcType="VARCHAR" property="nick" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="bean" jdbcType="INTEGER" property="bean" />
+        <result column="grade" jdbcType="INTEGER" property="grade" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="last_sign" jdbcType="INTEGER" property="lastSign" />
+        <result column="now_sign" jdbcType="INTEGER" property="nowSign" />
+        <result column="most_sign" jdbcType="INTEGER" property="mostSign" />
+        <result column="create_at" jdbcType="BIGINT" property="createAt" />
+        <result column="update_at" jdbcType="BIGINT" property="updateAt" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="sign_days" jdbcType="LONGVARCHAR" property="signDays" />
+    </resultMap>
+
+    <parameterMap id="User" type="com.academy.core.pojo.User"/>
+
+    <sql id="Base_Column_List">
+        id, open_id, nick, pic, email, phone, bean, grade, `status`, address, last_sign,
+        now_sign, most_sign, create_at, update_at, update_by, sign_days
+    </sql>
+
+    <select id="findByOpenId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `user` where open_id = #{openId}
+    </select>
+
+    <insert id="insertUser" parameterMap="User" useGeneratedKeys="true" keyProperty="id">
+        insert into `user` (
+        id, open_id, nick, pic, email, phone, grade, address,
+        create_at, update_at, sign_days
+        ) values (#{id}, #{openId}, #{nick}, #{pic}, #{email}, #{phone},
+        #{grade}, #{address}, #{createAt}, #{updateAt}, #{signDays});
+    </insert>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `user` where id = #{id}
+    </select>
+
+</mapper>
