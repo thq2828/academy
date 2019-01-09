@@ -13,6 +13,8 @@
         <module>academy-noface-home-web</module>
         <module>academy-noface-admin-web</module>
         <module>academy-noface-registy-center</module>
+        <module>academy-noface-article-service</module>
+        <module>academy-noface-admin-service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
