@@ -8,6 +8,17 @@ public class ResultBean<T> {
     public ResultBean() {
     }
 
+    public ResultBean(Integer code) {
+        this.code = code;
+        this.message= StatusCode.getName(code);
+    }
+
+    public ResultBean(Integer code, T data) {
+        this.code = code;
+        this.message= StatusCode.getName(code);
+        this.data = data;
+    }
+
     public ResultBean(Integer code, String message) {
         this.code = code;
         this.message = message;
@@ -45,7 +56,7 @@ public class ResultBean<T> {
 
     @Override
     public String toString() {
-        return "ResultBean{" +
+        return "ResultBean1{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", data=" + data +

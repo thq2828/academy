@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "这个controller主要是前台文章的接口")
+@Api(tags = "前台文章模块接口")
 @RestController
 @Slf4j
 @RequestMapping("a")
@@ -62,12 +62,12 @@ public class ArtilcleController {
     @ApiOperation(value = "文章和banner列表", notes = "根据category的不同，区别banner和文章")
     @GetMapping("/u/articles")
     public ResultBean getArticles(@RequestParam(name = "category") Integer category,
-                                  @RequestParam(name = "page") Integer page,
-                                  @RequestParam(name = "size") Integer size) {
+                                  @RequestParam(name = "page",required = false) Integer page,
+                                  @RequestParam(name = "size",required = false) Integer size) {
         log.info("ArtilcleController.getArticles:测试是否进入");
 
         if (category == null) {
-            return new ResultBean(201, "类别不能为null");
+            return new ResultBean(604);
         }
         if (page == null) {
             page = 1;
@@ -81,15 +81,14 @@ public class ArtilcleController {
         log.info("文章类别：" + category + ",第几页：" + page + ",每页多少行" + size);
 
 
-        ResultBean result = new ResultBean();
-        result.setCode(200);
-        result.setMessage("数据查询成功！");
+
+
         List<Article> articles = new ArrayList<>();
         for (Integer i = 0; i < size; i++) {
             articles.add(article);
         }
-        result.setData(articles);
-        return result;
+
+        return new ResultBean<List<Article>>(200,articles);
     }
 
     @ApiOperation(value = "文章详情", notes = "根据url中的id获取文章详情")
@@ -97,7 +96,7 @@ public class ArtilcleController {
     public ResultBean<Article> getArticle(@PathVariable(value = "id") Long id) {
         log.info("ArtilcleController.getArticle:测试是否进入"+",id:"+id);
         article.setId(id);
-        return new ResultBean<Article>(200,"数据查询成功！",article);
+        return new ResultBean<Article>(200,article);
     }
 
     @ApiOperation(value = "点赞和收藏",notes = "根据URL获取文章的id，type=1时为点赞，type=2为收藏")
@@ -107,15 +106,15 @@ public class ArtilcleController {
         log.info("ArtilcleController.likeOrCollection:测试是否进入"+",id:"+id);
         article.setId(id);
         if (type==null){
-            return new ResultBean(202,"type不能为null");
+            return new ResultBean(601);
         }
         if (type==1){
-            return new ResultBean<Integer>(200,"点赞成功",article.getLike()+1);
+            return new ResultBean<Integer>(200,article.getLike()+1);
         }
         if (type==2){
-            return new ResultBean<Integer>(200,"收藏成功",article.getCollection()+1);
+            return new ResultBean<Integer>(200,article.getCollection()+1);
         }
-        return new ResultBean(203,"无法识别type");
+        return new ResultBean(602);
     }
 
 
@@ -126,15 +125,15 @@ public class ArtilcleController {
         log.info("ArtilcleController.putLikeOrCollection:测试是否进入"+",id:"+id);
         article.setId(id);
         if (type==null){
-            return new ResultBean(202,"type不能为null");
+            return new ResultBean(602);
         }
         if (type==1){
-            return new ResultBean<Integer>(200,"取消点赞成功",article.getLike()-1);
+            return new ResultBean<Integer>(200,article.getLike()-1);
         }
         if (type==2){
-            return new ResultBean<Integer>(200,"取消收藏成功",article.getCollection()-1);
+            return new ResultBean<Integer>(200,article.getCollection()-1);
         }
 
-        return new ResultBean(203,"无法识别type");
+        return new ResultBean(603);
     }
 }

@@ -4,6 +4,8 @@ public class Manager {
 
     private Long id;
 
+
+
     private String name;
 
     private String pwd;
@@ -19,6 +21,8 @@ public class Manager {
     private Long updateAt;
 
     private Long createAt;
+
+
 
     public Long getId() {
         return id;

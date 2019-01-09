@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "这个controller主要是后台文章的接口")
+
 @RestController
 @Slf4j
 @RequestMapping("a")
+@Api(tags = "后台文章模块接口")
 public class ArticleController {
     private static Article article;
 
@@ -44,16 +45,16 @@ public class ArticleController {
 
     @ApiOperation(value = "查询列表", notes = "传入什么参数，对应什么条件，多个参数查询的是满足的多个条件")
     @GetMapping("/a/articles")
-    public ResultBean getArticles(@RequestParam(name = "title") String title,
-                                  @RequestParam(name = "author") String author,
-                                  @RequestParam(name = "category") Integer category,
-                                  @RequestParam(name = "status") Integer status,
-                                  @RequestParam(name = "starLike") Integer starLike,
-                                  @RequestParam(name = "endLike") Integer endLike,
-                                  @RequestParam(name = "startCollection") Integer startCollection,
-                                  @RequestParam(name = "endCollection") Integer endCollection,
-                                  @RequestParam(name = "page") Integer page,
-                                  @RequestParam(name = "size") Integer size) {
+    public ResultBean getArticles(@RequestParam(name = "title",required = false) String title,
+                                  @RequestParam(name = "author",required = false) String author,
+                                  @RequestParam(name = "category",required = false) Integer category,
+                                  @RequestParam(name = "status",required = false) Integer status,
+                                  @RequestParam(name = "starLike",required = false) Integer starLike,
+                                  @RequestParam(name = "endLike",required = false) Integer endLike,
+                                  @RequestParam(name = "startCollection",required = false) Integer startCollection,
+                                  @RequestParam(name = "endCollection",required = false) Integer endCollection,
+                                  @RequestParam(name = "page",required = false) Integer page,
+                                  @RequestParam(name = "size",required = false) Integer size) {
         log.info("后台：ArtilcleController.getArticles:测试是否进入");
         log.info("title:" + title + ",author:" + author + ",category:" + category +
                 ",status:" + size + ",starLike:" + starLike + ",endLike:" + endLike +
@@ -63,7 +64,7 @@ public class ArticleController {
             category = 1;
         }
         if (starLike > endLike || startCollection > endCollection) {
-            return new ResultBean(204, "初始点赞收藏数不能大于结束点收藏赞数");
+            return new ResultBean(603);
         }
         if (page == null) {
             page = 1;
@@ -75,7 +76,7 @@ public class ArticleController {
         for (int i = 0; i < size; i++) {
             articles.add(article);
         }
-        return new ResultBean<List<Article>>(200, "数据查询成功", articles);
+        return new ResultBean<List<Article>>(200,  articles);
     }
 
     @ApiOperation(value = "文章详情", notes = "根据url中的id获取文章详情")
@@ -83,14 +84,14 @@ public class ArticleController {
     public ResultBean getArticle(@PathVariable(name = "id") Long id) {
         log.info("ArtilcleController.getArticle:测试是否进入" + ",id:" + id);
         article.setId(id);
-        return new ResultBean<Article>(200, "数据查询成功！", article);
+        return new ResultBean<Article>(200, article);
     }
 
     @ApiOperation(value = "新增文章",notes = "创建用户")
     @PostMapping("/a/article")
     public ResultBean addArticle(@RequestBody Article article){
         log.info("ArtilcleController.putArticle:测试是否进入" );
-        return new ResultBean(200,"保存成功");
+        return new ResultBean(200);
     }
 
     @ApiOperation(value = "更新文章",notes ="根据URL获取文章的id进行更新文章" )
@@ -98,14 +99,14 @@ public class ArticleController {
     public ResultBean putArticle(@PathVariable(name = "id")Long id,@RequestBody Article article){
         log.info("ArtilcleController.putArticle:测试是否进入" + ",id:" + id);
         article.setStatus(2);
-        return new ResultBean(200,"更新成功");
+        return new ResultBean(200);
     }
 
     @ApiOperation(value = "文章上下架",notes = "根据URL获取文章的id进行更新文章上下架")
     @PutMapping("/a/article/status/{id}")
     public ResultBean putArticleStatus(@PathVariable(name = "id")Long id, @RequestBody Article article){
         log.info("ArtilcleController.putArticleStatus:测试是否进入" + ",id:" + id);
-        return new ResultBean(200,"下架成功");
+        return new ResultBean(200);
     }
 
 }
