@@ -20,7 +20,7 @@ public class JJWTUtil {
 
     public static String sign(Long uid) {
         // Token默认过期时间60分钟
-        Date expiration = new Date(System.currentTimeMillis() + 6000 * 6000);
+        Date expiration = new Date(System.currentTimeMillis() + 6000 * 6000 * 24);
         return Jwts.builder()
                 .claim("uid", uid)
                 .setExpiration(expiration)

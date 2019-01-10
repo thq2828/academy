@@ -18,7 +18,7 @@
         <result column="create_at" jdbcType="BIGINT" property="createAt" />
         <result column="update_at" jdbcType="BIGINT" property="updateAt" />
         <result column="update_by" jdbcType="BIGINT" property="updateBy" />
-        <result column="sign_days" jdbcType="LONGVARCHAR" property="signDays" />
+        <result column="sign_days" jdbcType="VARCHAR" property="signDays" />
     </resultMap>
 
     <parameterMap id="User" type="com.academy.core.pojo.User"/>
@@ -37,9 +37,9 @@
     <insert id="insertUser" parameterMap="User" useGeneratedKeys="true" keyProperty="id">
         insert into `user` (
         id, open_id, nick, pic, email, phone, grade, address,
-        create_at, update_at, sign_days
+        create_at, update_at
         ) values (#{id}, #{openId}, #{nick}, #{pic}, #{email}, #{phone},
-        #{grade}, #{address}, #{createAt}, #{updateAt}, #{signDays});
+        #{grade}, #{address}, #{createAt}, #{updateAt});
     </insert>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -47,5 +47,90 @@
         <include refid="Base_Column_List"/>
         from `user` where id = #{id}
     </select>
+    
+    <update id="updateUser" parameterMap="User">
+        update
+        `user`
+        <set>
+            <if test="nick != null">
+                nick = #{nick},
+            </if>
+            <if test="pic != null">
+                pic = #{pic},
+            </if>
+            <if test="bean != null">
+                bean = #{bean},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="signDays != null">
+                sign_days = #{signDays},
+            </if>
+            <if test="lastSign != null">
+                last_sign = #{lastSign},
+            </if>
+            <if test="nowSign != null">
+                now_sign = #{nowSign},
+            </if>
+            <if test="mostSign != null">
+                most_sign = #{mostSign},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
+    <select id="listUserByQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from `user`
+        <where>
+            <if test="nick != null">
+                and nick = #{nick}
+            </if>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="grade != null">
+                and grade = #{grade}
+            </if>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+            <if test="email != null">
+                and email = #{email}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beanFrom != null">
+                and beanFrom <![CDATA[ >= ]]> #{beanFrom}
+            </if>
+            <if test="beanTo != null">
+                and beanTo <![CDATA[ <= ]]> #{beanTo}
+            </if>
+            <if test="address != null">
+                and address = #{address}
+            </if>
+        </where>
+        order by create_at desc
+    </select>
 </mapper>

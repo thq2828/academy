@@ -22,14 +22,23 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
         <!--分页插件-->
-        <!--<dependency>-->
-        <!--<groupId>com.github.pagehelper</groupId>-->
-        <!--<artifactId>pagehelper-spring-boot-starter</artifactId>-->
-        <!--<version>1.2.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
+        <!-- JDBC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
         <!--分页插件-->
         <!--<dependency>-->
         <!--<groupId>com.github.pagehelper</groupId>-->

@@ -1,6 +1,16 @@
 spring:
   application:
     name: home-web
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://db.academy.noface:3306/academy_noface?serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8
+    username: arthur
+    password: arthur
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
 
 server:
   port: 20720
@@ -9,3 +19,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:20725/eureka/
+
+#pagehelper分页插件
+pagehelper:
+  reasonable: true
+  params: count=countSql
+  support-methods-arguments: true
+  auto-dialect: mysql
