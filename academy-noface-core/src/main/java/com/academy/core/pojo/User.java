@@ -3,6 +3,8 @@ package com.academy.core.pojo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * user
@@ -10,6 +12,11 @@ import java.io.Serializable;
  */
 @Data
 public class User implements Serializable {
+
+    public static final Integer SIGN_UP = 5;
+    public static final Integer ON = 1;
+    public static final Integer OFF = 0;
+
     /**
      * 自增id
      */
@@ -94,6 +101,27 @@ public class User implements Serializable {
      * 签到详情
      */
     private String signDays;
+
+    /**
+     * 签到详情List
+     */
+    private List<Integer> signList;
+
+    public void setSignDays(String signDays) {
+        this.signDays = signDays;
+        String replaceDays = this.signDays.replace("[", "").replace("]","").trim();
+        List<String> signs = new ArrayList<>();
+
+        if(replaceDays.length() != 0) {
+            signs = Arrays.asList(replaceDays.split(","));
+        }
+
+        if(signs.size() != 0){
+            signList = signs.stream().map(String::trim).map(Integer::parseInt).collect(Collectors.toList());
+        }else{
+            signList = new ArrayList<>();
+        }
+    }
 
     private static final long serialVersionUID = 1L;
 }
