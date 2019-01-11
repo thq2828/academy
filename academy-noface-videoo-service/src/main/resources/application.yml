@@ -1,6 +1,9 @@
+server:
+  port: 20727
+
 spring:
   application:
-    name: home-web
+    name: academy-noface-videoo-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://db.academy.noface:3306/academy_noface?serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8
@@ -11,20 +14,11 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       maximum-pool-size: 15
-  profiles:
-    include: config
 
-server:
-  port: 20720
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:20725/eureka/
-
-#pagehelper分页插件
-pagehelper:
-  reasonable: true
-  params: count=countSql
-  support-methods-arguments: true
-  auto-dialect: mysql

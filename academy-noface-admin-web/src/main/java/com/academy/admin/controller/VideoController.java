@@ -3,54 +3,64 @@ package com.academy.admin.controller;
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.Teacher;
 import com.academy.core.pojo.Video;
+import com.academy.core.service.TeacherService;
+import com.academy.core.service.VideoService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class VideoController {
 
+    @Resource
+    private VideoService videoService;
+
+    @Resource
+    private TeacherService teacherService;
     /**
      * 视频列表
      */
-        @GetMapping("/a/u/video/list")
-    public Response findList(@RequestParam(value = "page") Integer page,
-                             @RequestParam(value = "size") Integer size,
+    @GetMapping("/a/u/video/list")
+    public Response findList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                             @RequestParam(value = "size", defaultValue = "10") Integer size,
                              @RequestParam(value = "title", required = false) Integer title,
+                             @RequestParam(value = "type", required = false) Integer type,
                              @RequestParam(value = "grade", required = false) Integer grade,
                              @RequestParam(value = "subject", required = false) Integer subject,
                              @RequestParam(value = "likeFrom", required = false) String likeFrom,
                              @RequestParam(value = "likeTo", required = false) String likeTo,
                              @RequestParam(value = "collectFrom", required = false) Integer collectFrom,
                              @RequestParam(value = "collectTo", required = false) Integer collectTo,
-                             @RequestParam(value = "teacherName", required = false) Integer teacherName,
-                             @RequestParam(value = "status", required = false) String status) {
-        Video video = new Video();
+                             @RequestParam(value = "teacherName", required = false) String teacherName,
+                             @RequestParam(value = "status", required = false) Integer status) {
+        log.info("后台查询视频列表title={},type={},grade={},subject={},likeFrom={},likeTo={},collectFrom={},collectTo={},teacherName={},status={}",
+                title, type, grade, subject, likeFrom, likeTo, collectFrom, collectTo, teacherName, status);
 
-        video.setId(1L);
-        video.setTitle("葫芦娃全集");
-        video.setType(1);
-        video.setGrade(3);
-        video.setSubject(4);
-        video.setIntro("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        video.setContent("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-        video.setUrl("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4");
-        video.setTeacherId(1L);
-        video.setTeacherNick("苍老师");
-        video.setTeacherPic("http://thirdwx.qlogo.cn/mmopen/vi_32/kaCCtnsmXico9mEWKmTKeZpjibLLchNe5TTF7b9IoAAeqQoP1BnRpDuukr1DsVnFXm1zzM2tWRck8biaMUffh2DPg/132");
-        video.setStatus(1);
-        video.setCollect(200);
-        video.setLike(888);
-        video.setCollectStatus(1);
-        video.setLikeStatus(1);
-
-        List<Video> videoList = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            videoList.add(video);
+        Long teacherId;
+        if(teacherName==null){
+            teacherId = null;
+        }else {
+            Teacher teacher = teacherService.findByNick(teacherName);
+            if(teacher == null) {
+                teacherId = null;
+            }else {
+                teacherId = teacher.getId();
+            }
         }
 
-        return new Response<>(0, "success", videoList);
+        PageHelper.startPage(page, size);
+        List<Video> videoList = videoService.listVideoByQuery(title, type, grade, subject, likeFrom, likeTo, collectFrom, collectTo, teacherId, status);
+        PageInfo pageInfo = new PageInfo<>(videoList);
+        log.info("视频列表 size = {}", videoList.size());
+
+        return new Response<>(0, "success", pageInfo);
     }
 
     /**
@@ -58,23 +68,8 @@ public class VideoController {
      */
     @GetMapping("/a/u/video/{id}")
     public Response find(@PathVariable("id") Long id) {
-        Video video = new Video();
-        video.setId(1L);
-        video.setTitle("葫芦娃全集");
-        video.setType(1);
-        video.setGrade(3);
-        video.setSubject(4);
-        video.setIntro("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        video.setContent("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-        video.setUrl("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4");
-        video.setTeacherId(1L);
-        video.setTeacherNick("苍老师");
-        video.setTeacherPic("http://thirdwx.qlogo.cn/mmopen/vi_32/kaCCtnsmXico9mEWKmTKeZpjibLLchNe5TTF7b9IoAAeqQoP1BnRpDuukr1DsVnFXm1zzM2tWRck8biaMUffh2DPg/132");
-        video.setStatus(1);
-        video.setCollect(200);
-        video.setLike(888);
-        video.setCollectStatus(1);
-        video.setLikeStatus(1);
+        log.info("视频详情 id = {}", id);
+        Video video = videoService.findById(id);
         return new Response<>(0, "success", video);
     }
 
@@ -83,7 +78,13 @@ public class VideoController {
      */
     @PostMapping("/a/u/video")
     public Response add(@RequestBody Video video) {
-        return new Response<>(0, "success", 2L);
+        // +++++++++++++++++++++++++++++++
+        video.setCreateBy(1L);
+        video.setUpdateBy(1L);
+        // ++++++++++++++++++++++++++++++
+        Long id = videoService.insert(video);
+        log.info("新增视频 id = {}", id);
+        return new Response<>(0, "success", id);
     }
 
     /**

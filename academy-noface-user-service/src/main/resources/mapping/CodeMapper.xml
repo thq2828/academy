@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.academy.user.mapper.CodeMapper">
+    <resultMap id="BaseResultMap" type="com.academy.core.pojo.Code">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="info" jdbcType="VARCHAR" property="info" />
+        <result column="number" jdbcType="INTEGER" property="number" />
+        <result column="create_at" jdbcType="BIGINT" property="createAt" />
+        <result column="update_at" jdbcType="BIGINT" property="updateAt" />
+    </resultMap>
+
+    <parameterMap id="Code" type="com.academy.core.pojo.Code"/>
+
+    <sql id="Base_Column_List">
+        id, info, `number`, create_at
+    </sql>
+
+    <select id="findByNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where info = #{info}
+    </select>
+
+    <insert id="insert" parameterMap="Code" keyProperty="id" useGeneratedKeys="true">
+        insert into code (
+        id, info, `number`, create_at, update_at
+        ) values (#{id}, #{info}, #{number}, #{createAt}, #{updateAt});
+    </insert>
+
+    <update id="update" parameterMap="Code">
+        update
+        code
+        <set>
+            <if test="number != null">
+                `number` = #{number},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+        </set>
+        where info = #{info}
+    </update>
+</mapper>

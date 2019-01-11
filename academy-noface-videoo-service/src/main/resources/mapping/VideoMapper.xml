@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.academy.video.mapper.VideoMapper">
+    <resultMap id="BaseResultMap" type="com.academy.core.pojo.Video">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="grade" jdbcType="INTEGER" property="grade" />
+        <result column="subject" jdbcType="INTEGER" property="subject" />
+        <result column="teacher_id" jdbcType="BIGINT" property="teacherId" />
+        <result column="cover" jdbcType="VARCHAR" property="cover" />
+        <result column="collect" jdbcType="INTEGER" property="collect" />
+        <result column="like" jdbcType="INTEGER" property="like" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="intro" jdbcType="VARCHAR" property="intro" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="time" jdbcType="BIGINT" property="time" />
+        <result column="create_at" jdbcType="BIGINT" property="createAt" />
+        <result column="update_at" jdbcType="BIGINT" property="updateAt" />
+        <result column="create_by" jdbcType="BIGINT" property="createBy" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    </resultMap>
+
+    <parameterMap id="Video" type="com.academy.core.pojo.Video"/>
+
+    <sql id="Base_Column_List">
+        id, title, `type`, grade, subject, teacher_id, cover, `collect`, `like`, `status`,
+        intro, url, `time`, content, create_at, update_at, create_by, update_by
+    </sql>
+
+    <select id="listVideoByQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        <where>
+            <if test="title != null">
+                and title = #{title}
+            </if>
+            <if test="type != null">
+                and `type` = #{type}
+            </if>
+            <if test="grade != null">
+                and grade = #{grade}
+            </if>
+            <if test="subject != null">
+                and subject = #{subject}
+            </if>
+            <if test="teacherId != null">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="likeFrom != null">
+                and `like` <![CDATA[ >= ]]> #{likeFrom}
+            </if>
+            <if test="likeTo != null">
+                and `like` <![CDATA[ <= ]]> #{likeTo}
+            </if>
+            <if test="collectFrom != null">
+                and `collect` <![CDATA[ >= ]]> #{collectFrom}
+            </if>
+            <if test="collectTo != null">
+                and `collect` <![CDATA[ <= ]]> #{collectTo}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by create_at desc
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterMap="Video" useGeneratedKeys="true" keyProperty="id">
+        insert into video (
+        id, title, `type`, grade, subject, teacher_id, cover, `status`,
+        intro, url, `time`, content, create_at, update_at, create_by, update_by
+        ) values (#{id}, #{title}, #{type}, #{type}, #{type}, #{teacherId}, #{cover}, #{status},
+        #{intro}, #{url}, #{time}, #{content}, #{createAt}, #{updateAt}, #{createBy}, #{updateBy});
+    </insert>
+
+    <update id="updateUser" parameterMap="Video">
+        update
+        video
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="subject != null">
+                subject = #{subject},
+            </if>
+            <if test="teacherId != null">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="cover != null">
+                cover = #{cover},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="intro != null">
+                intro = #{intro},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="time != null">
+                `time` = #{time},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="mostSign != null">
+                most_sign = #{mostSign},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
