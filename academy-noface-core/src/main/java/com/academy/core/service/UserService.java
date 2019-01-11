@@ -19,7 +19,7 @@ public interface UserService {
     User findById(@RequestParam("id") Long id);
 
     @PutMapping("/feign/user")
-    void update( User user);
+    void update(@RequestBody User user);
 
     @GetMapping("/feign/user/list")
     List<User> listUserByQuery(@RequestParam(value = "nick", required = false) String nick,

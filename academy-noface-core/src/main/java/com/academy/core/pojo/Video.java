@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 @Data
 public class Video implements Serializable {
+    public static final Integer CARD_VIDEO = 1;
+    public static final Integer BANNER_VIDEO = 2;
+
     /**
      * 自增id
      */
