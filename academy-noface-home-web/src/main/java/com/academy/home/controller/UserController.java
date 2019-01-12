@@ -1,15 +1,19 @@
 package com.academy.home.controller;
 
+import com.academy.core.pojo.Code;
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.User;
 import com.academy.core.service.UserService;
 import com.academy.home.utils.LoginUtil;
+import com.academy.home.utils.MsgUtil;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.print.attribute.standard.NumberUp;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -93,8 +97,29 @@ public class UserController {
      */
     @GetMapping("/a/u/student/code")
     public Response getCode(@RequestParam(value = "info") String info,
-                            @RequestParam(value = "type") String type) {
+                            @RequestParam(value = "type") Integer type) {
+        log.info("获取验证码 type = {}, info = {}", type, info);
 
+        if(type.equals(Code.PHONE)) {
+            if(!info.matches(Code.REGEX_PHONE)){
+                log.info("手机号格式不正确");
+                return new Response<>(-1, "手机号格式不正确", info);
+            }
+            try{
+                Boolean result = MsgUtil.sendMsg(info);
+                System.out.println(result);
+                if(result){
+                    return new Response<>(0, "success", info);
+                }else {
+                    log.info("验证码发送失败");
+                    return new Response<>(-1, "发送失败", info);
+                }
+            }catch (IOException e){
+                e.printStackTrace();
+                log.info("验证码发送失败 msg = {}", e.getMessage());
+                return new Response<>(-1, "发送失败", info);
+            }
+        }
         return new Response<>(0, "sucess", info);
     }
 
@@ -120,7 +145,7 @@ public class UserController {
         Long uid = LoginUtil.getUid(request);
         log.info("修改学生信息 uid = {}", uid);
         user.setId(uid);
-        log.info("user = {}", user);
+        user.setSignDays(userService.findById(uid).getSignDays());
         userService.update(user);
         return new Response<>(0, "success", uid);
     }

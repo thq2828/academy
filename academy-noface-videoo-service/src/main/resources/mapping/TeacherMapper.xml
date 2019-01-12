@@ -7,6 +7,8 @@
         <result column="pic" jdbcType="VARCHAR" property="pic" />
     </resultMap>
 
+    <parameterMap id="Teacher" type="com.academy.core.pojo.Teacher"/>
+
     <select id="findByNick" resultMap="BaseResultMap">
         select *
         from teacher
@@ -18,4 +20,21 @@
         from teacher
         where id = #{id}
     </select>
+
+    <select id="findList" resultMap="BaseResultMap">
+        select *
+        from teacher
+    </select>
+
+    <insert id="insert" parameterMap="Teacher" keyProperty="id" useGeneratedKeys="true">
+        insert into teacher (
+          id, nick, pic
+        ) values (#{id}, #{nick}, #{pic});
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from
+        teacher
+        where id = #{id}
+    </delete>
 </mapper>

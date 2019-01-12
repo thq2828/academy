@@ -48,6 +48,9 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public Video findById(@PathVariable("id") Long id) {
         Video video = videoMapper.findById(id);
+        if(video==null){
+            return video;
+        }
         Teacher teacher = teacherService.findById(video.getTeacherId());
         video.setTeacherNick(teacher.getNick());
         video.setTeacherPic(teacher.getPic());

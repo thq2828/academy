@@ -17,6 +17,13 @@ public class User implements Serializable {
     public static final Integer ON = 1;
     public static final Integer OFF = 0;
 
+    public static final Integer GRADE_LOW = 1;
+    public static final Integer GRADE_HIGH = 6;
+
+    public static final Integer SUBJECT_LOW = 1;
+    public static final Integer SUBJECT_HIGH = 9;
+
+
     /**
      * 自增id
      */

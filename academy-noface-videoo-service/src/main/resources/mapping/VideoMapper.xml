@@ -83,7 +83,7 @@
         #{intro}, #{url}, #{time}, #{content}, #{createAt}, #{updateAt}, #{createBy}, #{updateBy});
     </insert>
 
-    <update id="updateUser" parameterMap="Video">
+    <update id="updateVideo" parameterMap="Video">
         update
         video
         <set>
@@ -105,6 +105,12 @@
             <if test="cover != null">
                 cover = #{cover},
             </if>
+            <if test="collect != null">
+                collect = #{collect},
+            </if>
+            <if test="like != null">
+                `like` = #{like},
+            </if>
             <if test="status != null">
                 status = #{status},
             </if>
@@ -119,9 +125,6 @@
             </if>
             <if test="content != null">
                 content = #{content},
-            </if>
-            <if test="mostSign != null">
-                most_sign = #{mostSign},
             </if>
             <if test="updateAt != null">
                 update_at = #{updateAt},
