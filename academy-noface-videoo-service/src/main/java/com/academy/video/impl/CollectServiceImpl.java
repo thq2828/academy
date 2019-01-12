@@ -34,4 +34,6 @@ public class CollectServiceImpl implements CollectService {
                        @RequestParam(value = "videoId") Long videoId) {
         collectMapper.deleteCollect(type, userId, videoId);
     }
+
+
 }

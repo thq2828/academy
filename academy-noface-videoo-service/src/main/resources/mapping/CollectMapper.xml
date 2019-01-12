@@ -7,6 +7,9 @@
         <result column="video_id" jdbcType="BIGINT" property="videoId" />
         <result column="type" jdbcType="TINYINT" property="type" />
     </resultMap>
+
+    <parameterMap id="Collect" type="com.academy.core.pojo.Collect"/>
+
     <sql id="Base_Column_List">
         id, user_id, video_id, `type`
     </sql>
@@ -30,7 +33,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterMap="com.academy.core.pojo.Collect">
+    <insert id="insert" parameterMap="Collect">
         insert into collect (
         id, user_id, video_id, `type`
         ) values (#{id}, #{userId}, #{videoId}, #{type});
@@ -40,7 +43,6 @@
         delete from collect
         where `type` = #{type}
         and user_id = #{userId}
-        and video_id = #{video_id}
+        and video_id = #{videoId}
     </delete>
-
 </mapper>

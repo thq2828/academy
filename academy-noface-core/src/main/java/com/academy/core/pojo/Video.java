@@ -10,8 +10,16 @@ import java.io.Serializable;
  */
 @Data
 public class Video implements Serializable {
+
     public static final Integer CARD_VIDEO = 1;
     public static final Integer BANNER_VIDEO = 2;
+
+    public static final Integer OFF = 0;
+    public static final Integer ON = 1;
+
+    public static final Integer TITLE_LENGTH = 40;
+    public static final Integer INTRO_LENGTH = 140;
+    public static final String VIDEO_FORMAT = "MP4";
 
     /**
      * 自增id

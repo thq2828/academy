@@ -2,19 +2,24 @@ package com.academy.admin.controller;
 
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.Teacher;
+import com.academy.core.pojo.User;
 import com.academy.core.pojo.Video;
 import com.academy.core.service.TeacherService;
 import com.academy.core.service.VideoService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * @author Joe
+ */
 @RestController
 @Slf4j
 public class VideoController {
@@ -78,10 +83,50 @@ public class VideoController {
      */
     @PostMapping("/a/u/video")
     public Response add(@RequestBody Video video) {
-        // +++++++++++++++++++++++++++++++
-        video.setCreateBy(1L);
-        video.setUpdateBy(1L);
-        // ++++++++++++++++++++++++++++++
+        Long uid = 5L;
+        log.info("新增视频 uid = {}", uid);
+        Integer type = video.getType();
+        if(type == null) {
+            log.info("视频类型错误");
+            return new Response<>(-1, "类型错误", video);
+        }
+        if(!(type.equals(Video.CARD_VIDEO) || type.equals(Video.BANNER_VIDEO))) {
+            log.info("视频类型错误 type = {}", type);
+            return new Response<>(-1, "类型错误", video);
+        }
+        if(StringUtils.isEmpty(video.getTitle()) || video.getTitle().length() > Video.TITLE_LENGTH) {
+            log.info("视频标题错误 title = {}", video.getTitle());
+            return new Response<>(-1, "标题错误", video);
+        }
+        if(StringUtils.isEmpty(video.getIntro()) || video.getIntro().length() > Video.INTRO_LENGTH) {
+            log.info("视频简介错误 intro = {}", video.getIntro());
+            return new Response<>(-1, "简介错误", video);
+        }
+        Integer grade = video.getGrade();
+        if(grade == null || grade < User.GRADE_LOW || grade > User.GRADE_HIGH) {
+            log.info("视频年级错误 grade = {}", grade);
+            return new Response<>(-1, "年级错误", video);
+        }
+        Integer subject = video.getSubject();
+        if(subject == null || subject < User.SUBJECT_LOW || subject > User.SUBJECT_HIGH) {
+            log.info("视频科目错误 subject = {}", subject);
+            return new Response<>(-1, "科目错误", video);
+        }
+
+        String url = video.getUrl();
+        if(!StringUtils.substringAfter(url, ".").toUpperCase().equals(Video.VIDEO_FORMAT)){
+            log.info("视频格式错误 url = {}", url);
+            return new Response<>(-1, "格式错误", video);
+        }
+        String cover = video.getCover();
+        if(video.getType().equals(Video.BANNER_VIDEO)) {
+            if(cover == null) {
+                log.info("Banner视频必须有cover");
+                return new Response<>(-1, "Banner视频缺少cover", video);
+            }
+        }
+        video.setCreateBy(uid);
+        video.setUpdateBy(uid);
         Long id = videoService.insert(video);
         log.info("新增视频 id = {}", id);
         return new Response<>(0, "success", id);
@@ -91,7 +136,68 @@ public class VideoController {
      * 编辑视频
      */
     @PutMapping("/a/u/video/{id}")
-    public Response update(@PathVariable("id") Long id) {
+    public Response update(@PathVariable("id") Long id, @RequestBody Video video, HttpServletRequest request) {
+        Long uid = 5L;
+        log.info("编辑视频 id = {}, uid = {}", id, uid);
+        Video check = videoService.findById(id);
+        if(check==null){
+            log.info("无效id = {}", id);
+            return new Response<>(-1, "无效id", id);
+        }
+        Integer type = video.getType();
+        if(type == null) {
+            log.info("视频类型错误");
+            return new Response<>(-1, "类型错误", video);
+        }
+        if(!(type.equals(Video.CARD_VIDEO) || type.equals(Video.BANNER_VIDEO))) {
+            log.info("视频类型错误 type = {}", type);
+            return new Response<>(-1, "类型错误", video);
+        }
+        if(StringUtils.isEmpty(video.getTitle()) || video.getTitle().length() > Video.TITLE_LENGTH) {
+            log.info("视频标题错误 title = {}", video.getTitle());
+            return new Response<>(-1, "标题错误", video);
+        }
+        if(StringUtils.isEmpty(video.getIntro()) || video.getIntro().length() > Video.INTRO_LENGTH) {
+            log.info("视频简介错误 intro = {}", video.getIntro());
+            return new Response<>(-1, "简介错误", video);
+        }
+        Integer grade = video.getGrade();
+        if(grade == null || grade < User.GRADE_LOW || grade > User.GRADE_HIGH) {
+            log.info("视频年级错误 grade = {}", grade);
+            return new Response<>(-1, "年级错误", video);
+        }
+        Integer subject = video.getSubject();
+        if(subject == null || subject < User.SUBJECT_LOW || subject > User.SUBJECT_HIGH) {
+            log.info("视频科目错误 subject = {}", subject);
+            return new Response<>(-1, "科目错误", video);
+        }
+
+        String url = video.getUrl();
+        if(!StringUtils.substringAfter(url, ".").toUpperCase().equals(Video.VIDEO_FORMAT)){
+            log.info("视频格式错误 url = {}", url);
+            return new Response<>(-1, "格式错误", video);
+        }
+        String cover = video.getCover();
+        if(video.getType().equals(Video.BANNER_VIDEO)) {
+            if(cover == null) {
+                log.info("Banner视频必须有cover");
+                return new Response<>(-1, "Banner视频缺少cover", video);
+            }
+        }
+        // 更新数据
+        check.setTitle(video.getTitle());
+        check.setGrade(video.getGrade());
+        check.setSubject(video.getSubject());
+        check.setTeacherId(video.getTeacherId());
+        check.setType(video.getType());
+        check.setIntro(video.getIntro());
+        check.setContent(video.getContent());
+        check.setUrl(video.getUrl());
+        check.setCover(video.getCover());
+        check.setUpdateBy(uid);
+        videoService.update(video);
+        log.info("后台视频更新成功 id = {}", id);
+
         return new Response<>(0, "success", id);
     }
 
@@ -99,7 +205,17 @@ public class VideoController {
      * 视频上下架
      */
     @PutMapping("/a/u/video/status/{id}")
-    public Response updateStatus(@PathVariable("id") Long id) {
+    public Response updateStatus(@PathVariable("id") Long id, HttpServletRequest request) {
+        Long uid = 2L;
+        log.info("视频上下架 id = {}， uid = {}", id, uid);
+        Video check = videoService.findById(id);
+        if(check == null) {
+            log.info("无效id");
+            return new Response<>(-1, "无效id", id);
+        }
+        check.setStatus(check.getStatus().equals(Video.ON) ? Video.OFF : Video.ON);
+        videoService.update(check);
+        log.info("视频status更新成功id = {}", id);
         return new Response<>(0, "success", id);
     }
 
@@ -109,18 +225,9 @@ public class VideoController {
      */
     @GetMapping("/a/u/teacher/list")
     public Response findTeachers() {
-        Teacher teacher = new Teacher();
-        teacher.setId(1L);
-        teacher.setNick("奥术大师多撒");
-        teacher.setPic("http://thirdwx.qlogo.cn/mmopen/vi_32/kaCCtnsmXico9mEWKmTKeZpjibLLchNe5TTF7b9IoAAeqQoP1BnRpDuukr1DsVnFXm1zzM2tWRck8biaMUffh2DPg/132");
-
-        List<Teacher> teacherList = new ArrayList<>();
-
-        for(int i = 0; i < 5; i++) {
-            teacherList.add(teacher);
-        }
-
-        return new Response<>(0, "success", teacherList);
+        log.info("查询全部老师");
+        List<Teacher> teachers = teacherService.findAll();
+        return new Response<>(0, "success", teachers);
     }
 
     /**
@@ -128,7 +235,10 @@ public class VideoController {
      */
     @PostMapping("/a/u/teacher")
     public Response addTeacher(@RequestBody Teacher teacher) {
-        return new Response<>(0, "success", 2L);
+        log.info("新增老师");
+        Long id = teacherService.insert(teacher);
+        log.info("新增老师成功 id = {}", id);
+        return new Response<>(0, "success", id);
     }
 
     /**
@@ -136,10 +246,14 @@ public class VideoController {
      */
     @DeleteMapping("/a/u/teacher/{id}")
     public Response deleteTeacher(@PathVariable("id") Long id) {
+        log.info("删除老师 id = {}", id);
+        Teacher check = teacherService.findById(id);
+        if(check==null) {
+            log.info("无效id");
+            return new Response<>(-1, "无效id", id);
+        }
+        teacherService.delete(id);
+        log.info("删除成功");
         return new Response<>(0, "success", 2L);
     }
-
-
-
-
 }

@@ -14,13 +14,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    @GetMapping("/feign/user/openId")
     public User findByOpenId(@RequestParam("openId") String openId) {
         return userMapper.findByOpenId(openId);
     }
 
     @Override
-    @PostMapping("/feign/user")
     public Long insertUser(@RequestBody User user) {
         user.setCreateAt(System.currentTimeMillis());
         user.setUpdateAt(System.currentTimeMillis());
@@ -29,22 +27,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @GetMapping("/feign/user/id")
     public User findById(@RequestParam("id") Long id) {
         return userMapper.findById(id);
     }
 
     @Override
-    @PutMapping("/feign/user")
-    public void update(User user) {
-        System.out.println("++++++++++++++++++++++");
-        System.out.println(user);
+    public void update(@RequestBody User user) {
         user.setUpdateAt(System.currentTimeMillis());
         userMapper.updateUser(user);
     }
 
     @Override
-    @GetMapping("/feign/user/list")
     public List<User> listUserByQuery(@RequestParam(value = "nick", required = false) String nick,
                                       @RequestParam(value = "id", required = false) Long id,
                                       @RequestParam(value = "grade", required = false) Integer grade,

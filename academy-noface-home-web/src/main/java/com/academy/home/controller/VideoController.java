@@ -88,7 +88,10 @@ public class VideoController {
         Long uid = LoginUtil.getUid(request);
         log.info("查询视频 id = {}", id);
         Video video = videoService.findById(id);
-
+        if(video==null){
+            log.info("无效id");
+            return new Response<>(-1, "无效id", id);
+        }
         List<Collect> likeList = collectService.findByVideoId(video.getId(), Collect.LIKE, uid, null);
         List<Collect> collectList = collectService.findByVideoId(video.getId(), Collect.COLLECT, uid, null);
         // 当前用户点赞状态
@@ -118,7 +121,8 @@ public class VideoController {
             log.info("id 无效");
             return new Response<>(-1, "无效id", id);
         }
-        if(check.getCollectStatus()==0){
+        List<Collect> collectList = collectService.findByVideoId(id, Collect.COLLECT, uid, null);
+        if(collectList.size()==0){
             log.info("收藏");
             // 新增一条关系记录
             Collect collect = new Collect();
@@ -126,9 +130,11 @@ public class VideoController {
             collect.setUserId(uid);
             collect.setVideoId(id);
             collectService.insert(collect);
-
+            System.out.println("+++++++++++++++++++++");
+            System.out.println(check);
             check.setCollect(check.getCollect() + 1);
-            check.setCollectStatus(Collect.STATUS_COLLECT);
+            System.out.println("=======================");
+            System.out.println(check);
             videoService.update(check);
             return new Response<>(0, "success", id);
         }else{
@@ -136,7 +142,6 @@ public class VideoController {
             // 删除一条关系记录
             collectService.delete(Collect.COLLECT, uid, id);
             check.setCollect(check.getCollect() - 1);
-            check.setCollectStatus(Collect.STATUS_UNCOLLECT);
             videoService.update(check);
             return new Response<>(0, "success", id);
         }
@@ -146,14 +151,34 @@ public class VideoController {
      * 点赞
      */
     @PutMapping("/a/u/video/like/{id}")
-    public Response like(@PathVariable("id") Long id) {
-        Map<String, Integer> map = new HashMap<>(4);
-        map.put("collectStatus", 0);
-        map.put("likeStatus", 1);
-        map.put("collect", 666);
-        map.put("like", 888);
-
-        return new Response<>(0, "sucess", map);
+    public Response like(@PathVariable("id") Long id, HttpServletRequest request) {
+        Long uid = LoginUtil.getUid(request);
+        log.info("改变视频点赞状态 id = {}, uid = {}", id, uid);
+        Video check = videoService.findById(id);
+        if(check==null) {
+            log.info("id 无效");
+            return new Response<>(-1, "无效id", id);
+        }
+        List<Collect> likeList = collectService.findByVideoId(id, Collect.LIKE, uid, null);
+        if(likeList.size()==0){
+            log.info("点赞");
+            // 新增一条关系记录
+            Collect collect = new Collect();
+            collect.setType(Collect.LIKE);
+            collect.setUserId(uid);
+            collect.setVideoId(id);
+            collectService.insert(collect);
+            check.setLike(check.getLike() + 1);
+            videoService.update(check);
+            return new Response<>(0, "success", id);
+        }else{
+            log.info("取消点赞");
+            // 删除一条关系记录
+            collectService.delete(Collect.LIKE, uid, id);
+            check.setLike(check.getLike() - 1);
+            videoService.update(check);
+            return new Response<>(0, "success", id);
+        }
     }
 
 }
