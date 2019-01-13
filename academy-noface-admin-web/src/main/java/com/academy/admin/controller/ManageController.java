@@ -1,16 +1,29 @@
 package com.academy.admin.controller;
 
+import com.academy.core.dto.PageBean;
+import com.academy.core.dto.Result;
 import com.academy.core.dto.ResultBean;
 import com.academy.core.pojo.JWT;
 import com.academy.core.pojo.Manager;
+import com.academy.core.service.ManagerService;
+import com.academy.core.util.AccessTokenUtil;
+import com.academy.core.util.BPwdEncoderUtils;
+import com.academy.core.util.PageUtil;
+import com.academy.core.util.PublicUtility;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.academy.core.util.Constant.MANAGER_ID;
+import static com.academy.core.util.Constant.STATUS;
 
 
 @RestController
@@ -18,104 +31,142 @@ import java.util.List;
 @RequestMapping("a")
 @Api(tags = "后台Manager模块接口")
 public class ManageController {
-    private static Manager manager;
-    private static JWT jwt;
-    /**
-     * 初始化manner假数据
-     */
-    static {
-        manager = new Manager();
-        manager.setId(1L);
-        manager.setName("admin");
-        manager.setPwd("123456");
-        manager.setRoleId(1L);
-        manager.setStatus("using");
-        manager.setCreateAt(System.currentTimeMillis());
-        manager.setUpdateAt(System.currentTimeMillis());
-        manager.setCreateBy(1L);
-        manager.setUpdateBy(1L);
-    }
-    static {
-        jwt=new JWT();
-        jwt.setAccess_token("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDcwOTI2NjgsInVzZXJfbmFtZSI6ImhhaXFpbmciLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6IjYzMmM0NTljLWFiM2EtNGIwNi05ZGIyLTBmZDNjMmI0ZTI0OCIsImNsaWVudF9pZCI6InVzZXItc2VydmljZSIsInNjb3BlIjpbInNlcnZpY2UiXX0.SGSxO2ikib_wbo5z8s-mnFqNbqrj_Ij5JvNgHIog2jo2-8V7rQonfMJkJqZEaQjn6KQ0RjvEQEHQESJqoINdd84H78ojgChehJWAbUq4LPulH63Kp50EJbv4GLU7XI5LFxuDY0xc85oH2oVLlYBE07gauGLDR_copW0EpqLKXchvZ0Pem21CNeGnTxstn1aZVIw23wgpoK5wRMGCdYq0Xs0QDczKZ9840WB10251EDnFnut6t_EzMQ0LHYBwgy53mSd-wIcsU0w_nKVKTvYpv5X-e9Yml9Sb3KQgs65pHyCu_osumbBL7jbM7XULwipb6RHaHeMjkd-jepPaFFf0xg");
-        jwt.setToken_type("bearer");
-        jwt.setExpires_in(86399);
-        jwt.setRefresh_token("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJoYWlxaW5nIiwic2NvcGUiOlsic2VydmljZSJdLCJhdGkiOiI2MzJjNDU5Yy1hYjNhLTRiMDYtOWRiMi0wZmQzYzJiNGUyNDgiLCJleHAiOjE1NDk1OTgyNjgsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwianRpIjoiNzUzNzE4OTYtZmMzNy00MTc4LWIyMTktOTc4NDQzNzQxYTM1IiwiY2xpZW50X2lkIjoidXNlci1zZXJ2aWNlIn0.ZVWdyTrTBX1ZBrNQIa315N34ZHovDqMcWxU1FTArq-mZuDLeaO4brFg7OomjWuMDLZZGNxDak3bHhb5Y23aqysgVJsonTFKVm-vizWVzMHL9c4A6nj_OMrplLdqpWTMX-yq-lTNj0yreisOtM_33opvIkUK4xDkksu5h2eiAqKg3Gm6aMYKhaOP2JyRlKBWzd9MNPZpLaiPdUlkJA_BrMjOWvIK8wm8bPf3ZJD-EXhz0NaMdqQaQxSlDOCf2DSNfkk1wMFGdBlp4W-p-n28x8FEmL2lun2TQ6F3M348-FmD87qMvwoedGbuCd03Can2HeK6Rzn09YLe30ZFE1KR3Cg");
-        jwt.setScope("service");
-        jwt.setJti("632c459c-ab3a-4b06-9db2-0fd3c2b4e248");
-    }
+    @Autowired
+    private ManagerService managerService;
 
     /**
      * ------------------------------后台manager接口:拦截/a/a/*路由---------------------------
      */
-    @ApiOperation(value = "登录",notes = "登录成功后返回角色id")
+    @ApiOperation(value = "登录", notes = "登录成功后返回Access_token,Access_token放在请求头")
     @PostMapping("/login")
-    public ResultBean login(@RequestParam("name")String name,
-                            @RequestParam("pwd")String pwd){
+    public Result login(@RequestParam("name") String name,
+                        @RequestParam("pwd") String pwd) {
+        return managerService.getManagerInfo(name, pwd);
 
-        return new ResultBean<JWT>(200,jwt);
     }
 
 
-    @ApiOperation(value = "注销登录",notes = "点击注销即退出登录")
+    @ApiOperation(value = "注销登录", notes = "点击注销即退出登录")
     @PostMapping("/logout")
-    public ResultBean logout(){
+    public ResultBean logout() {
         return new ResultBean(200);
     }
 
-    @ApiOperation(value = "账户详情",notes = "根据URL获取id查看账户的详细信息")
+
+    @ApiOperation(value = "账户详情", notes = "根据URL获取id查看账户的详细信息")
     @GetMapping("/a/manager/{id}")
-    public ResultBean getManager(@PathVariable(name = "id")Long id){
-        return new ResultBean<Manager>(200,manager);
+    public ResultBean getManager(@PathVariable(name = "id") Long id) {
+        log.info("----------------------进入进入ManageController.getManagers-------------------");
+        log.info("id:" + id);
+        return managerService.getManageById(id);
     }
 
-    @ApiOperation(value = "管理员列表",notes = "根据条件的不同返回满足条件的管理列表")
+
+    @ApiOperation(value = "管理员列表", notes = "根据条件的不同返回满足条件的管理列表")
     @GetMapping("/a/manager/search")
-    public ResultBean getManagers(@RequestParam(name = "name",required = false)String name,
-                                  @RequestParam(name="roleId",required = false)Long roleId,
-                                  @RequestParam(name="page",required = false)Integer page,
-                                  @RequestParam(name = "size",required = false)Integer size){
-        if (page==null||size<1){
-            page=1;
+    public ResultBean getManagers(@RequestParam(name = "name", required = false) String name,
+                                  @RequestParam(name = "roleId", required = false) Long roleId,
+                                  @RequestParam(name = "page", required = false) Integer page,
+                                  @RequestParam(name = "size", required = false) Integer size) {
+        log.info("--------------进入ManageController.getManagers--------------");
+        if (page == null || page < 1) {
+            page = 1;
         }
-        if (size==null||size<1){
-            size=10;
+        if (size == null || size < 1) {
+            size = 10;
         }
-        List<Manager> managers=new ArrayList<>();
-        for (int i=0;i<size;i++){
-            managers.add(manager);
+        log.info("name:" + name + ",roleId:" + roleId + ",page" + page + ",size:" + size);
+        int start = PageUtil.getStart(page, size);
+        ResultBean resultBean = managerService.getManagers(name, roleId, start, size);
+        if (!PublicUtility.isNullOrEmpty(resultBean.getData())) {
+            log.info("加入当前页数据：" + page);
+            ((PageBean) resultBean).setPageNum(page);
         }
-        return new ResultBean<List<Manager>>(200,managers);
+        return resultBean;
     }
 
-    @ApiOperation(value = "新增管理员",notes = "创建一个账号")
+
+    @ApiOperation(value = "新增管理员", notes = "创建一个账号")
     @PostMapping("/a/manager")
-    public ResultBean addManager(@RequestBody Manager manager){
-        return new ResultBean(200);
+    public ResultBean addManager(HttpServletRequest request, @RequestBody Manager manager) {
+        log.info("--------------进入ManageController.addManager--------------");
+        //参数校验
+        if (PublicUtility.isNullOrEmpty(manager)) {
+            return new ResultBean(203);
+        }
+        if (PublicUtility.strIsEmpty(manager.getPwd())) {
+            return new ResultBean(626);
+        }
+        if (PublicUtility.strIsEmpty(manager.getName())) {
+            return new ResultBean(627);
+        }
+        if (PublicUtility.numIsEmpty(manager.getRoleId())) {
+            return new ResultBean(628);
+        }
+        if (PublicUtility.strIsEmpty(manager.getStatus())) {
+            manager.setStatus(STATUS);
+        }
+        log.info("manager:" + manager);
+        //从请求头中获取登录的id
+        Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
+        //加入时间和部分信息
+        manager.setPwd(BPwdEncoderUtils.BCryptPassword(manager.getPwd()));
+        manager.setCreateBy(managerId);
+        manager.setUpdateBy(managerId);
+        manager.setCreateAt(System.currentTimeMillis());
+        manager.setUpdateAt(System.currentTimeMillis());
+
+        return managerService.addManager(manager);
     }
 
-    @ApiOperation(value = "修改管理员",notes = "根据URL获取管理员的id进行资料的修改")
+
+    @ApiOperation(value = "修改管理员", notes = "根据URL获取管理员的id进行资料的修改")
     @PutMapping("/a/manager/{id}")
-    public ResultBean putManager(@PathVariable(name = "id")Long id,
-                                 @RequestBody Manager manager){
-        return new ResultBean(200);
+    public ResultBean putManager(HttpServletRequest request, @PathVariable(name = "id") Long id,
+                                 @RequestBody Manager manager) {
+        log.info("--------------进入ManageController.putManager--------------");
+        if (PublicUtility.isNullOrEmpty(manager)) {
+            return new ResultBean(625);
+        }
+        Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
+        manager.setUpdateBy(managerId);
+        manager.setId(id);
+        manager.setUpdateAt(System.currentTimeMillis());
+        log.info("ManageController.putManager:manager:" + manager);
+        return managerService.putManager(manager);
     }
 
-    @ApiOperation(value = "删除管理员",notes = "根据URL获取管理员的id进行删除")
+
+    @ApiOperation(value = "删除管理员", notes = "根据URL获取管理员的id进行删除")
     @DeleteMapping("/a/manager/{id}")
-    public ResultBean delManager(@PathVariable(name = "id")Long id){
-        return new ResultBean(200,"删除成功");
+    public ResultBean delManager(@PathVariable(name = "id") Long id) {
+        log.info("--------------进入ManageController.delManager--------------");
+        return managerService.delManager(id);
     }
 
-    @ApiOperation(value = "修改密码",notes = "输入新密码和旧密码进行修改")
+
+    @ApiOperation(value = "修改密码", notes = "输入新密码和旧密码进行修改")
     @PutMapping("/a/pwd")
-    public ResultBean putPwd(@RequestParam(name = "newPwd")String newPwd,
-                             @RequestParam(name = "oldPwd")String oldPwd){
-        if(newPwd.equals(oldPwd)){
+    public ResultBean putPwd(HttpServletRequest request,
+                             @RequestParam(name = "newPwd") String newPwd,
+                             @RequestParam(name = "oldPwd") String oldPwd) {
+        if (PublicUtility.strIsEmpty(newPwd) || PublicUtility.strIsEmpty(oldPwd)) {
+            return new ResultBean(630);
+        }
+        if (newPwd.equals(oldPwd)) {
             return new ResultBean(621);
         }
-        return new ResultBean(200);
+        //创建manager对象作为载体
+        Manager manager = new Manager();
+        //取出managerId作为更新人
+        Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
+        manager.setId(managerId);
+        manager.setUpdateBy(managerId);
+        manager.setUpdateAt(System.currentTimeMillis());
+        manager.setPwd(BPwdEncoderUtils.BCryptPassword(newPwd));
 
+
+        return new ResultBean(200);
     }
 
 }

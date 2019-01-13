@@ -130,7 +130,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.academy.core.pojo.Role">
+  <update id="updateByPrimaryKey" parameterType="com.academy.core.pojo.Role">
 
     update role
     set name = #{name,jdbcType=VARCHAR},
@@ -142,15 +142,5 @@
       permissions = #{permissions,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.academy.core.pojo.Role">
 
-    update role
-    set name = #{name,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=BIGINT},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      update_at = #{updateAt,jdbcType=BIGINT},
-      create_at = #{createAt,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
 </mapper>

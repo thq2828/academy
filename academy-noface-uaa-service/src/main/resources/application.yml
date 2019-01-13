@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: uaa-service
+  datasource:
+    druid:
+      db-type: com.alibaba.druid.pool.DruidDataSource
+      #监控统计拦截的filters
+      filters: stat
+      url: jdbc:mysql://db.academy.noface:3306/academy_noface?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT
+      username: arthur
+      password: arthur
+      #配置初始化大小/最小/最大
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      #获取连接等待超时时间
+      max-wait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+  jpa:
+    show-sql: true
+
+
+server:
+  port: 20721
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:20725/eureka/

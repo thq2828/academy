@@ -1,6 +1,8 @@
 package com.academy.core.pojo;
 
-public class Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public class Role  {
 
     private Long id;
 
@@ -117,4 +119,5 @@ public class Role {
                 ", permissions='" + permissions + '\'' +
                 '}';
     }
+
 }

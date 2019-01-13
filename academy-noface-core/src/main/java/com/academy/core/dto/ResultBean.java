@@ -1,6 +1,6 @@
 package com.academy.core.dto;
 
-public class ResultBean<T> {
+public class ResultBean<T> implements Result {
     private Integer code;
     private String message;
     private T data;
@@ -10,12 +10,12 @@ public class ResultBean<T> {
 
     public ResultBean(Integer code) {
         this.code = code;
-        this.message= StatusCode.getName(code);
+        this.message = StatusCode.getName(code);
     }
 
     public ResultBean(Integer code, T data) {
         this.code = code;
-        this.message= StatusCode.getName(code);
+        this.message = StatusCode.getName(code);
         this.data = data;
     }
 
@@ -56,7 +56,7 @@ public class ResultBean<T> {
 
     @Override
     public String toString() {
-        return "ResultBean1{" +
+        return "ResultBean{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", data=" + data +

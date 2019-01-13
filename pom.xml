@@ -8,7 +8,6 @@
     <artifactId>academy</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-
     <modules>
         <module>academy-noface-core</module>
         <module>academy-noface-home-web</module>
@@ -17,6 +16,7 @@
         <module>academy-noface-article-service</module>
         <module>academy-noface-admin-service</module>
         <module>academy-noface-user-service</module>
+        <module>academy-noface-uaa-service</module>
         <module>academy-noface-videoo-service</module>
     </modules>
 

@@ -15,23 +15,100 @@
         <result column="create_at" jdbcType="BIGINT" property="createAt"/>
     </resultMap>
     <sql id="Base_Column_List">
-
     id, name, pwd, role_id, status, create_by, update_by, update_at, create_at
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
 
+    <!--根据id查询管理者-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from manager
         where id = #{id,jdbcType=BIGINT}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 
+    <!--根据姓名查找数据-->
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from manager
+        where name = #{name}
+    </select>
+
+    <!--动态查询数据-->
+    <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from manager
+        <trim prefix="WHERE" suffixOverrides="AND|OR">
+            <if test="name != null">
+                <bind name="name" value="'%'+name+'%'"/>
+                NAME like #{name} and
+            </if>
+            <if test="roleId != null">
+                role_id=#{roleId} and
+            </if>
+            <if test="status !=null">
+                status=#{status} and
+            </if>
+            <if test="create_by !=null">
+                create_by=#{createBy} and
+            </if>
+            <if test="update_by !=null">
+                update_by=#{updateBy} and
+            </if>
+            <if test="create_at !=null">
+                create_at=#{createAt} and
+            </if>
+            <if test="update_at !=null">
+                update_at=#{updateAt}
+            </if>
+        </trim>
+        order by update_at desc
+        limit #{start},#{size}
+    </select>
+    <!--动态查询满足条件的总数-->
+
+    <select id="selectByCountSelective" parameterType="map" resultType="int">
+        select
+        count(*)
+        from manager
+        <trim prefix="WHERE" suffixOverrides="AND|OR">
+            <if test="name != null">
+                <bind name="name" value="'%'+name+'%'"/>
+                NAME like #{name} and
+            </if>
+            <if test="roleId != null">
+                role_id=#{roleId} and
+            </if>
+            <if test="status !=null">
+                status=#{status} and
+            </if>
+            <if test="create_by !=null">
+                create_by=#{createBy} and
+            </if>
+            <if test="update_by !=null">
+                update_by=#{updateBy} and
+            </if>
+            <if test="create_at !=null">
+                create_at=#{createAt} and
+            </if>
+            <if test="update_at !=null">
+                update_at=#{updateAt}
+            </if>
+        </trim>
+        order by update_at desc
+    </select>
+
+
+
+    <!--根据id删除管理员-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from manager
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.academy.core.pojo.Manager">
 
+    <!--插入一整条数据-->
+    <insert id="insert" parameterType="com.academy.core.pojo.Manager">
     insert into manager (id, name, pwd,
       role_id, status, create_by, 
       update_by, update_at, create_at
@@ -41,6 +118,8 @@
       #{updateBy,jdbcType=BIGINT}, #{updateAt,jdbcType=BIGINT}, #{createAt,jdbcType=BIGINT}
       )
   </insert>
+
+    <!--动态插入数据-->
     <insert id="insertSelective" parameterType="com.academy.core.pojo.Manager">
         insert into manager
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -102,11 +181,11 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.academy.core.pojo.Manager">
 
+    <!--动态更新管理员-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.academy.core.pojo.Manager">
         update manager
         <set>
-
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
@@ -134,8 +213,9 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.academy.core.pojo.Manager">
 
+    <!--更新一整条数据-->
+    <update id="updateByPrimaryKey" parameterType="com.academy.core.pojo.Manager">
     update manager
     set
       name = #{name,jdbcType=VARCHAR},
@@ -148,4 +228,5 @@
       create_at = #{createAt,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

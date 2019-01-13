@@ -1,10 +1,15 @@
 package com.academy.core.pojo;
 
-public class Manager {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
+
+public class Manager  {
 
     private Long id;
-
-
 
     private String name;
 
@@ -32,18 +37,19 @@ public class Manager {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
+
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getPwd() {
         return pwd;
     }
-
 
     public void setPwd(String pwd) {
         this.pwd = pwd == null ? null : pwd.trim();
@@ -122,4 +128,5 @@ public class Manager {
                 ", createAt=" + createAt +
                 '}';
     }
+
 }
