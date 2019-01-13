@@ -3,13 +3,17 @@ package com.academy.admin.controller;
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.User;
 import com.academy.core.service.UserService;
+import com.academy.core.util.AccessTokenUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.academy.core.util.Constant.MANAGER_ID;
 
 @RestController
 @Slf4j
@@ -60,14 +64,16 @@ public class UserController {
      * 用户上下架
      */
     @PutMapping("/a/u/user/status/{id}")
-    public Response updateStatus(@PathVariable("id") Long id) {
-        log.info("用户上下架 id = {}", id);
+    public Response updateStatus(@PathVariable("id") Long id, HttpServletRequest request) {
+         Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
+        log.info("用户上下架 id = {}, uid = {}", id, uid);
         User user = userService.findById(id);
         if(user == null) {
             log.info("无效id");
             return new Response<>(-1, "无效id", id);
         }
         user.setStatus(user.getStatus().equals(User.ON) ? User.OFF : User.ON);
+        user.setUpdateBy(uid);
         userService.update(user);
         log.info("更新status成功 id = {}", id);
         return new Response<>(0, "success", id);

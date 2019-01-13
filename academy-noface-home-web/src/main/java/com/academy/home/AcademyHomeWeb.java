@@ -10,6 +10,6 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 @EnableFeignClients(basePackages = "com.academy.core.service")
 public class AcademyHomeWeb {
     public static void main(String[] args) {
-        SpringApplication.run(AcademyHomeWeb.class,args);
+        SpringApplication.run(AcademyHomeWeb.class, args);
     }
 }

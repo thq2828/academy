@@ -9,12 +9,9 @@ import org.springframework.web.bind.annotation.*;
 public interface CodeService {
 
     @PostMapping("/feign/code")
-    Long insertCode(@RequestBody Code code);
+    void insertCode(@RequestBody Code code);
 
     @GetMapping("/feign/code")
-    Code findByNumber(@RequestParam(value = "info") String info);
-
-    @PutMapping("/feign/coed")
-    void update(@RequestBody Code code);
+    Code findByInfo(@RequestParam(value = "info") String info);
 
 }

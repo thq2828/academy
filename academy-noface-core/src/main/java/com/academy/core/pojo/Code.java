@@ -14,6 +14,8 @@ public class Code implements Serializable {
     public static final Integer PHONE = 1;
     public static final Integer EMAIL = 2;
 
+    public static final Integer TEN_MINUTES = 600000;
+
     /**
      * 验证手机号
      */
