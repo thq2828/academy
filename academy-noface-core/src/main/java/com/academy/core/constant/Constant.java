@@ -1,6 +1,17 @@
-package com.academy.core.util;
+package com.academy.core.constant;
 
 public class Constant {
+    /**
+     * 0-10常量
+     */
+    public static final Long PARENT=0L;
+    public static final Integer ZERO=0;
+    public static final Integer ONE=1;
+
+    public static final Integer START_PAGE=1;
+    public static final Integer START_SIZE=10;
+
+
     /**
      * 请求头中的Authorization
      */
@@ -37,5 +48,17 @@ public class Constant {
     //客户端的id
     public static final String CLIENT_ID="client_id";
 
+    /**
+     * Role常量表
+     */
+    //增加失败
+    public static final Integer ROLE_SUCCESS =1;
+    public static final Integer ROLE_PUT=1;
+    public static final Integer ROLE_DEl=1;
+
+    /**
+     * Modle常量表
+     */
+    public static final String TYPE="web";
 
 }

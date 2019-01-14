@@ -3,7 +3,6 @@ package com.academy.admin.controller;
 import com.academy.core.dto.PageBean;
 import com.academy.core.dto.Result;
 import com.academy.core.dto.ResultBean;
-import com.academy.core.pojo.JWT;
 import com.academy.core.pojo.Manager;
 import com.academy.core.service.ManagerService;
 import com.academy.core.util.AccessTokenUtil;
@@ -17,13 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static com.academy.core.util.Constant.MANAGER_ID;
-import static com.academy.core.util.Constant.STATUS;
+import static com.academy.core.constant.Constant.*;
 
 
 @RestController
@@ -69,11 +63,11 @@ public class ManageController {
                                   @RequestParam(name = "page", required = false) Integer page,
                                   @RequestParam(name = "size", required = false) Integer size) {
         log.info("--------------进入ManageController.getManagers--------------");
-        if (page == null || page < 1) {
-            page = 1;
+        if (page == null || page < ONE) {
+            page = START_PAGE;
         }
-        if (size == null || size < 1) {
-            size = 10;
+        if (size == null || size < ONE) {
+            size = START_SIZE;
         }
         log.info("name:" + name + ",roleId:" + roleId + ",page" + page + ",size:" + size);
         int start = PageUtil.getStart(page, size);

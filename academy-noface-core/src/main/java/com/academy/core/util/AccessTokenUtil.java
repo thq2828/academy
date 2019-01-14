@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
-import static com.academy.core.util.Constant.AUTHORIZATION;
+import static com.academy.core.constant.Constant.AUTHORIZATION;
 
 @Slf4j
 public class AccessTokenUtil {
@@ -23,7 +23,6 @@ public class AccessTokenUtil {
         //解密accessToken第二部分内容
         byte[] bytes = Base64.getUrlDecoder().decode(userInfoBase.getBytes(StandardCharsets.UTF_8));
         String userInfo=new String(bytes, StandardCharsets.UTF_8);
-        System.out.println(userInfo);
         //解密后的json数据装入Map
         Map<String,Object> map = JSON.parseObject(userInfo);
         return map.get(key);

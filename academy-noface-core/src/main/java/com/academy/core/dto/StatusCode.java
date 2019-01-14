@@ -11,6 +11,7 @@ public enum StatusCode {
     FAILURE(201,"操作失败"),
     DATA_IS_NULL(203,"数据不能为null"),
     SAVE_FAILD(204,"保存失败"),
+    NOT_PERMISSIONS(205,"角色没有模块权限"),
 
     /**
      * 文章模块code码,600-620
@@ -35,17 +36,31 @@ public enum StatusCode {
     MANAGER_EXISTS(629,"用户名已经存在"),
     PWD_NULL(630,"请输入新密码和旧密码"),
     PUT_PWD_FAILD(631,"更新密码错误"),
-    PUT_MANAGER_FAILD(632,"manager更新失败");
+    PUT_MANAGER_FAILD(632,"manager更新失败"),
 
 
 
     /**
      * Module模块code码，641-660
      */
+    MODULE_NOT_NULL(641,"module不能为null"),
+    MODULE_NULL(642,"模块的名字不能为null"),
+
+
+
 
     /**
      * Role模块code码，661-680
      */
+    ROLE_NOT_NULL(661,"role不能为null"),
+    ROLE_NAME_NULL(662,"role名不能为null"),
+    IDS_NOT_NULL(663,"ids不能为null"),
+    ROLE_IS_NULL(665,"没有角色信息"),
+    ROLE_IS_EXIST(666,"角色名经存在"),
+    ROLE_SAVE_FAILD(667,"新增角色失败"),
+    ROLE_PUT_FAILD(668,"更新失败！"),
+    DEL_ROLE_FAILD(669,"删除失败，role下有管理员信息"),
+    ROLE_DEL_FAILD(670,"删除失败");
 
 
     private int code;

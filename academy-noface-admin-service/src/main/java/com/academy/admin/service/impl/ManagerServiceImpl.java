@@ -3,12 +3,10 @@ package com.academy.admin.service.impl;
 import com.academy.admin.client.AuthServiceClient;
 import com.academy.admin.dao.ManagerMapper;
 import com.academy.core.dto.PageBean;
-import com.academy.core.dto.Result;
 import com.academy.core.service.ManagerService;
 import com.academy.core.dto.ResultBean;
 import com.academy.core.pojo.JWT;
 import com.academy.core.pojo.Manager;
-import com.academy.core.util.AccessTokenUtil;
 import com.academy.core.util.BPwdEncoderUtils;
 import com.academy.core.util.PublicUtility;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.academy.core.util.Constant.*;
+import static com.academy.core.constant.Constant.*;
 
 
 /**
@@ -66,7 +64,7 @@ public class ManagerServiceImpl implements ManagerService {
         map.put("name", name);
         map.put("roleId", roleId);
         int totalRecord = managerMapper.selectByCountSelective(map);
-        if (totalRecord < 1) {
+        if (totalRecord < ONE) {
             return new PageBean(625);
         }
         map.put("start", start);
@@ -123,6 +121,8 @@ public class ManagerServiceImpl implements ManagerService {
         }
         return new ResultBean(200);
     }
+
+
 
     @DeleteMapping("/impl/manager/{id}")
     @Override
