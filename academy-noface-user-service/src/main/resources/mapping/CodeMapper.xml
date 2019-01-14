@@ -15,7 +15,7 @@
         id, info, `number`, create_at
     </sql>
 
-    <select id="findByNumber" resultMap="BaseResultMap">
+    <select id="findByInfo" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from code

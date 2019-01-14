@@ -9,7 +9,7 @@ msg:
 email:
     url: http://api.sendcloud.net/apiv2/mail/send
     apiUser: joee_test_ObRIzs
-    apiKey: AercLSS3VYBK7fyL
-    from: joeeeee@joeeeee.org
-    fromName: Joeeeee
-    subject: 验证邮件
+    apiKey:
+    from:
+    fromName:
+    subject:

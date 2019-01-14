@@ -6,6 +6,7 @@ import com.academy.core.pojo.User;
 import com.academy.core.pojo.Video;
 import com.academy.core.service.TeacherService;
 import com.academy.core.service.VideoService;
+import com.academy.core.util.AccessTokenUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.academy.core.util.Constant.MANAGER_ID;
 
 /**
  * @author Joe
@@ -82,8 +85,8 @@ public class VideoController {
      * 新增视频
      */
     @PostMapping("/a/u/video")
-    public Response add(@RequestBody Video video) {
-        Long uid = 5L;
+    public Response add(@RequestBody Video video, HttpServletRequest request) {
+        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
         log.info("新增视频 uid = {}", uid);
         Integer type = video.getType();
         if(type == null) {
@@ -137,7 +140,7 @@ public class VideoController {
      */
     @PutMapping("/a/u/video/{id}")
     public Response update(@PathVariable("id") Long id, @RequestBody Video video, HttpServletRequest request) {
-        Long uid = 5L;
+        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
         log.info("编辑视频 id = {}, uid = {}", id, uid);
         Video check = videoService.findById(id);
         if(check==null){
@@ -206,7 +209,7 @@ public class VideoController {
      */
     @PutMapping("/a/u/video/status/{id}")
     public Response updateStatus(@PathVariable("id") Long id, HttpServletRequest request) {
-        Long uid = 2L;
+        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
         log.info("视频上下架 id = {}， uid = {}", id, uid);
         Video check = videoService.findById(id);
         if(check == null) {

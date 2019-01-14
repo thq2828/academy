@@ -19,8 +19,8 @@ public class JJWTUtil {
     private static final String JWT_KEY = "www.jnshu.com";
 
     public static String sign(Long uid) {
-        // Token默认过期时间60分钟
-        Date expiration = new Date(System.currentTimeMillis() + 6000 * 6000 * 24);
+        // Token默认过期时间10天
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 240);
         return Jwts.builder()
                 .claim("uid", uid)
                 .setExpiration(expiration)

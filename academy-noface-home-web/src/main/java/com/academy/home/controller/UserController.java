@@ -3,7 +3,9 @@ package com.academy.home.controller;
 import com.academy.core.pojo.Code;
 import com.academy.core.pojo.Response;
 import com.academy.core.pojo.User;
+import com.academy.core.service.CodeService;
 import com.academy.core.service.UserService;
+import com.academy.home.utils.EmailUtil;
 import com.academy.home.utils.LoginUtil;
 import com.academy.home.utils.MsgUtil;
 import io.swagger.models.auth.In;
@@ -24,6 +26,9 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CodeService codeService;
 
     /**
      * 获取签到详情
@@ -99,28 +104,54 @@ public class UserController {
     public Response getCode(@RequestParam(value = "info") String info,
                             @RequestParam(value = "type") Integer type) {
         log.info("获取验证码 type = {}, info = {}", type, info);
-
         if(type.equals(Code.PHONE)) {
             if(!info.matches(Code.REGEX_PHONE)){
                 log.info("手机号格式不正确");
                 return new Response<>(-1, "手机号格式不正确", info);
             }
             try{
-                Boolean result = MsgUtil.sendMsg(info);
-                System.out.println(result);
-                if(result){
-                    return new Response<>(0, "success", info);
-                }else {
+                Integer result = MsgUtil.sendMsg(info);
+                if(result==null){
                     log.info("验证码发送失败");
                     return new Response<>(-1, "发送失败", info);
+                }else {
+                    Code code = new Code();
+                    code.setInfo(info);
+                    code.setNumber(result);
+                    codeService.insertCode(code);
+                    return new Response<>(0, "success", info);
                 }
             }catch (IOException e){
                 e.printStackTrace();
                 log.info("验证码发送失败 msg = {}", e.getMessage());
                 return new Response<>(-1, "发送失败", info);
             }
+        }else if(type.equals(Code.EMAIL)) {
+            if(!info.matches(Code.REGEX_EMAIL)){
+                log.info("邮箱格式不正确");
+                return new Response<>(-1, "邮箱格式不正确", info);
+            }
+            try{
+                Integer result = EmailUtil.sendMsg(info);
+                if(result==null){
+                    log.info("验证码发送失败");
+                    return new Response<>(-1, "发送失败", info);
+                }else {
+                    Code code = new Code();
+                    code.setInfo(info);
+                    code.setNumber(result);
+                    codeService.insertCode(code);
+                    return new Response<>(0, "success", info);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                log.info("验证码发送失败 msg = {}", e.getMessage());
+                return new Response<>(-1, "发送失败", info);
+            }
+        }else {
+            log.info("非法type = {}", type);
+            return new Response<>(-1, "非法type", type);
         }
-        return new Response<>(0, "sucess", info);
     }
 
     /**
@@ -128,13 +159,36 @@ public class UserController {
      */
     @PutMapping("/a/u/student/bind")
     public Response bind(@RequestParam(value = "info") String info,
-                         @RequestParam(value = "type") String type,
-                         @RequestParam(value = "code") Integer code) {
-        if(code==6666) {
-            return new Response<>(0, "sucess", info);
-        }else {
+                         @RequestParam(value = "type") Integer type,
+                         @RequestParam(value = "code") Integer code,
+                         HttpServletRequest request) {
+        Long uid = LoginUtil.getUid(request);
+        log.info("用户绑定 info = {}, type = {}, code = {}, uid = {}", info, type, code, uid);
+        Code check = codeService.findByInfo(info);
+        if(check==null){
+            log.info("绑定信息错误");
+            return new Response<>(-1, "绑定信息错误", info);
+        }
+        if(System.currentTimeMillis() - check.getUpdateAt() > Code.TEN_MINUTES) {
+            log.info("验证码过期");
+            return new Response<>(-1, "验证码过期", info);
+        }
+        if(!code.equals(check.getNumber())) {
+            log.info("验证码错误");
             return new Response<>(-1, "验证码错误", info);
         }
+        User user = userService.findById(uid);
+        if(type.equals(Code.EMAIL)){
+            user.setEmail(info);
+            userService.update(user);
+            log.info("更新用户 email = {}", info);
+        }
+        if(type.equals(Code.PHONE)){
+            user.setPhone(info);
+            userService.update(user);
+            log.info("更新用户 phone = {}", info);
+        }
+        return new Response<>(0, "success", uid);
     }
 
     /**

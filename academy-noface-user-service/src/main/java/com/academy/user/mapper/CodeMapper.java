@@ -8,7 +8,7 @@ public interface CodeMapper {
 
     void insert(Code code);
 
-    Code findByNumber(String number);
+    Code findByInfo(String info);
 
     void update(Code code);
 }
