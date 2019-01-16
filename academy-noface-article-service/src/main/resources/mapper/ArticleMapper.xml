@@ -1,199 +1,256 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.academy.articleService.dao.ArticleMapper">
-  <resultMap id="BaseResultMap" type="com.academy.core.pojo.Article">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="category" jdbcType="INTEGER" property="category" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="author" jdbcType="VARCHAR" property="author" />
-    <result column="brief" jdbcType="VARCHAR" property="abstract" />
-    <result column="like" jdbcType="INTEGER" property="like" />
-    <result column="collection" jdbcType="INTEGER" property="collection" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="create_by" jdbcType="BIGINT" property="createBy" />
-    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
-    <result column="create_at" jdbcType="BIGINT" property="createAt" />
-    <result column="update_at" jdbcType="BIGINT" property="updateAt" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.academy.core.pojo.Article">
-    <result column="body" jdbcType="LONGVARCHAR" property="body" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, title, category, img_url, author, abstract, like, collection, status, create_by, 
+<mapper namespace="com.academy.article.dao.ArticleMapper">
+    <resultMap id="BaseResultMap" type="com.academy.core.pojo.Article">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="category" jdbcType="INTEGER" property="category"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="abstract" jdbcType="VARCHAR" property="brief"/>
+        <result column="love" jdbcType="INTEGER" property="like"/>
+        <result column="collection" jdbcType="INTEGER" property="collection"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="create_by" jdbcType="BIGINT" property="createBy"/>
+        <result column="update_by" jdbcType="BIGINT" property="updateBy"/>
+        <result column="create_at" jdbcType="BIGINT" property="createAt"/>
+        <result column="update_at" jdbcType="BIGINT" property="updateAt"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.academy.core.pojo.Article">
+        <result column="body" jdbcType="LONGVARCHAR" property="body"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, title, category, img_url, author, abstract, love, collection, status, create_by,
     update_by, create_at, update_at
   </sql>
-  <sql id="Blob_Column_List">
+    <sql id="Blob_Column_List">
     body
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from article
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--查询一条数据-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from article
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <!--动态查询一条数据-->
+    <select id="selectBySelective" parameterType="map" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from article
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="title != null">
+                <bind name="title" value="'%'+title+'%'"/>
+                title like #{title}
+            </if>
+            <if test="category != null">
+                and category=#{category}
+            </if>
+            <if test="imgUrl != null">
+                and img_url=#{imgUrl}
+            </if>
+            <if test="author != null">
+                <bind name="author" value="'%'+author+'%'"/>
+                and author like #{author}
+            </if>
+            <if test="abstract != null">
+                <bind name="brief" value="'%'+brief+'%'"/>
+                or abstract like #{brief}
+            </if>
+            <if test="starLike != null and endLike != null">
+                and love between #{starLike} and #{endLike}
+            </if>
+            <if test="startCollection != null and endCollection != null">
+                or collection between #{startCollection} and #{endCollection}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+            <if test="createBy != null">
+                and create_by=#{createBy}
+            </if>
+            <if test="updateBy != null">
+                and update_by=#{updateBy}
+            </if>
+            <if test="createAt != null">
+                and create_at=#{createAt}
+            </if>
+            <if test="updateAt != null">
+                and update_at=#{updateAt}
+            </if>
+            <if test="body != null">
+                and body=#{body}
+            </if>
+        </trim>
+        order by update_at desc
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <!--删除一条数据-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from article
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.academy.core.pojo.Article">
-    insert into article (id, title, category, 
+    <!--插入一条数据-->
+    <insert id="insert" parameterType="com.academy.core.pojo.Article">
+    insert into article (title, category,
       img_url, author, abstract, 
-      like, collection, status, 
+      love, collection, status,
       create_by, update_by, create_at, 
       update_at, body)
-    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{category,jdbcType=INTEGER}, 
-      #{imgUrl,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{abstract,jdbcType=VARCHAR}, 
+    values (#{title,jdbcType=VARCHAR}, #{category,jdbcType=INTEGER},
+      #{imgUrl,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{brief,jdbcType=VARCHAR},
       #{like,jdbcType=INTEGER}, #{collection,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{createBy,jdbcType=BIGINT}, #{updateBy,jdbcType=BIGINT}, #{createAt,jdbcType=BIGINT}, 
       #{updateAt,jdbcType=BIGINT}, #{body,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.academy.core.pojo.Article">
-    insert into article
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="category != null">
-        category,
-      </if>
-      <if test="imgUrl != null">
-        img_url,
-      </if>
-      <if test="author != null">
-        author,
-      </if>
-      <if test="abstract != null">
-        abstract,
-      </if>
-      <if test="like != null">
-        like,
-      </if>
-      <if test="collection != null">
-        collection,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="createAt != null">
-        create_at,
-      </if>
-      <if test="updateAt != null">
-        update_at,
-      </if>
-      <if test="body != null">
-        body,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="category != null">
-        #{category,jdbcType=INTEGER},
-      </if>
-      <if test="imgUrl != null">
-        #{imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null">
-        #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="abstract != null">
-        #{abstract,jdbcType=VARCHAR},
-      </if>
-      <if test="like != null">
-        #{like,jdbcType=INTEGER},
-      </if>
-      <if test="collection != null">
-        #{collection,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=BIGINT},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="createAt != null">
-        #{createAt,jdbcType=BIGINT},
-      </if>
-      <if test="updateAt != null">
-        #{updateAt,jdbcType=BIGINT},
-      </if>
-      <if test="body != null">
-        #{body,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.academy.core.pojo.Article">
-    update article
-    <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="category != null">
-        category = #{category,jdbcType=INTEGER},
-      </if>
-      <if test="imgUrl != null">
-        img_url = #{imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null">
-        author = #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="abstract != null">
-        abstract = #{abstract,jdbcType=VARCHAR},
-      </if>
-      <if test="like != null">
-        like = #{like,jdbcType=INTEGER},
-      </if>
-      <if test="collection != null">
-        collection = #{collection,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=BIGINT},
-      </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="createAt != null">
-        create_at = #{createAt,jdbcType=BIGINT},
-      </if>
-      <if test="updateAt != null">
-        update_at = #{updateAt,jdbcType=BIGINT},
-      </if>
-      <if test="body != null">
-        body = #{body,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.academy.core.pojo.Article">
+    <!--动态插入一条数据-->
+    <insert id="insertSelective" parameterType="com.academy.core.pojo.Article">
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="author != null">
+                author,
+            </if>
+            <if test="brief != null">
+                abstract,
+            </if>
+            <if test="like != null">
+                love,
+            </if>
+            <if test="collection != null">
+                collection,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+            <if test="body != null">
+                body,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=INTEGER},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null">
+                #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="brief != null">
+                #{brief,jdbcType=VARCHAR},
+            </if>
+            <if test="like != null">
+                #{like,jdbcType=INTEGER},
+            </if>
+            <if test="collection != null">
+                #{collection,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=BIGINT},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=BIGINT},
+            </if>
+            <if test="body != null">
+                #{body,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--动态更新一条数据-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.academy.core.pojo.Article">
+        update article
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                category = #{category,jdbcType=INTEGER},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null">
+                author = #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="brief != null">
+                abstract = #{brief,jdbcType=VARCHAR},
+            </if>
+            <if test="like != null">
+                love = #{like,jdbcType=INTEGER},
+            </if>
+            <if test="collection != null">
+                collection = #{collection,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=BIGINT},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt,jdbcType=BIGINT},
+            </if>
+            <if test="body != null">
+                body = #{body,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <!--更新一条数据-->
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.academy.core.pojo.Article">
     update article
     set title = #{title,jdbcType=VARCHAR},
       category = #{category,jdbcType=INTEGER},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
-      abstract = #{abstract,jdbcType=VARCHAR},
-      like = #{like,jdbcType=INTEGER},
+      abstract = #{brief,jdbcType=VARCHAR},
+      love = #{like,jdbcType=INTEGER},
       collection = #{collection,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=BIGINT},
@@ -203,20 +260,28 @@
       body = #{body,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.academy.core.pojo.Article">
-    update article
-    set title = #{title,jdbcType=VARCHAR},
-      category = #{category,jdbcType=INTEGER},
-      img_url = #{imgUrl,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      abstract = #{abstract,jdbcType=VARCHAR},
-      like = #{like,jdbcType=INTEGER},
-      collection = #{collection,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      create_by = #{createBy,jdbcType=BIGINT},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      create_at = #{createAt,jdbcType=BIGINT},
-      update_at = #{updateAt,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+    <!--查询文章对应用户点赞收藏数据-->
+    <select id="getUserAndArticleDate" resultType="int">
+        select ua.type
+        from user_article ua
+        where user_id=#{userId} and article_id=#{id}
+    </select>
+    <!--查询关系表中是否有点赞或者收藏数据-->
+    <select id="selectUserAndArticleByCount" resultType="int">
+        select count(*)
+        from user_article
+        where user_id=#{userId} and article_id=#{id} and type=#{type}
+    </select>
+    <!--更新点赞或者收藏-->
+    <insert id="insertUserArticle">
+        insert into user_article
+        (user_id,article_id,type)
+        values
+        (#{userId},#{id},#{type})
+    </insert>
+    <!--删除关系表中的一条数据-->
+    <delete id="delUserArticle">
+        delete from user_article
+        where user_id=#{userId} and article_id=#{id} and type=#{type}
+    </delete>
 </mapper>

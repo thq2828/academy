@@ -4,9 +4,7 @@ public class Module {
 
     private Long id;
 
-
     private Long parentId;
-
 
     private String name;
 

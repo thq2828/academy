@@ -12,6 +12,7 @@ public enum StatusCode {
     DATA_IS_NULL(203,"数据不能为null"),
     SAVE_FAILD(204,"保存失败"),
     NOT_PERMISSIONS(205,"角色没有模块权限"),
+    ID_NOT_NULL(206,"id不能为null"),
 
     /**
      * 文章模块code码,600-620
@@ -20,7 +21,20 @@ public enum StatusCode {
     UNRECOGNIZED_TYPE(602,"无法识别type"),
     LIKE_COLLECTION_FAILD(603,"初始点赞收藏数不能大于结束点收藏赞数"),
     CEGATORY_NOT_NULL(604,"category不能为null"),
-
+    ARTICLE_NOT_NULL(605,"文章不能为null"),
+    AUTHOR_NOT_NULL(606,"作者不能为null"),
+    BRIEF_NOT_NULL(607,"摘要不能为null"),
+    IMGURL_NOT_NULL(608,"封面不能为null"),
+    BODY_NOT_NULL(609,"正文不能为null"),
+    TITLE_NOT_NULL(610,"标题不能为null"),
+    ARTICLES_NOT_NULL(611,"文章数据为null"),
+    ADD_ARTICLE_FAILD(612,"增加文章失败"),
+    PUT_ARTICLE_FAILD(613,"更新文章失败"),
+    PUTAWAY_FAILD(614,"上架失败"),
+    PUTAWAY_FAILD_MANY(615,"上架的总数超过8个请先下架到8个以下在上架"),
+    LIKE_COLLECTION(616,"已在点赞或者收藏状态"),
+    LIKE_COLLECTION_DO(617,"没有点赞或者收藏状态"),
+    LIKE_COLLECTION_DEL(618,"取消点赞收藏失败"),
     /**
      * Manager模块code码，621-640
      */
@@ -45,7 +59,11 @@ public enum StatusCode {
      */
     MODULE_NOT_NULL(641,"module不能为null"),
     MODULE_NULL(642,"模块的名字不能为null"),
-
+    MODULES_NULL(643,"模块数据为null"),
+    MODULE_NAME_URL(644,"模块名或者url已经存在"),
+    MODULE_ADD_FAILD(645,"增加模块失败"),
+    MODULE_PUT_FAILD(646,"更新失败"),
+    MODULE_DEL_FAILD(647,"删除失败"),
 
 
 

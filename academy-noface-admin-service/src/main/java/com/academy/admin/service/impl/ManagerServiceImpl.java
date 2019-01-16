@@ -108,20 +108,17 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public ResultBean putManager(@RequestBody Manager manager) {
         log.info("----------------------进入进入ManagerServiceImpl.putManager-------------------");
-        if (!PublicUtility.strIsEmpty(manager.getName())){
-            Manager manager1 =managerMapper.selectByName(manager.getName());
-            if (!PublicUtility.isNullOrEmpty(manager1)){
-                return new ResultBean(629);
-            }
+        Manager manager1 = managerMapper.selectByName(manager.getName());
+        if (!PublicUtility.isNullOrEmpty(manager1)) {
+            return new ResultBean(629);
         }
-        int i=managerMapper.updateByPrimaryKeySelective(manager);
-        if(i<MANAGER_PUT_STATUS){
+        int i = managerMapper.updateByPrimaryKeySelective(manager);
+        if (i < MANAGER_PUT_STATUS) {
             log.info("ManagerServiceImpl.putManager:更新失败");
             return new ResultBean(631);
         }
         return new ResultBean(200);
     }
-
 
 
     @DeleteMapping("/impl/manager/{id}")
@@ -142,7 +139,6 @@ public class ManagerServiceImpl implements ManagerService {
     public ResultBean putPwd(@RequestBody Manager manager) {
         log.info("----------------------进入进入ManagerServiceImpl.putPwd-------------------");
         log.info("更新为：" + manager.toString());
-
         int i = managerMapper.updateByPrimaryKeySelective(manager);
         if (i < MANAGER_PUT_PWD) {
             return new ResultBean(631);

@@ -5,7 +5,7 @@ package com.academy.core.dto;
  * PageBean继承ResultBean，主要作用是返回分页的一些数据给前端
  * @param <T>
  */
-public class PageBean<T> extends ResultBean implements Result{
+public class PageBean<T> extends ResultBean {
 
     //已知数据
     private Integer pageNum;    //当前页,从请求那边传过来。

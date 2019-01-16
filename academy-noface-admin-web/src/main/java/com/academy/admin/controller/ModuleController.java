@@ -32,32 +32,14 @@ public class ModuleController {
     private ModuleService moduleService;
 
 
-    private static Module module;
-
-    /**
-     * 初始化module假数据
-     */
-    static {
-        module = new Module();
-        module.setId(1L);
-        module.setName("模块名字");
-        module.setParentId(0L);
-        module.setType("web");
-        module.setUrl("这是模块对应的URL，前端模版路由");
-        module.setCreateAt(System.currentTimeMillis());
-        module.setUpdateAt(System.currentTimeMillis());
-        module.setCreateBy(1L);
-        module.setUpdateBy(1L);
-    }
-
     /**
      * ----------------------------------后台module接口：拦截/a/a/*路由----------------------------
      */
 
-    @ApiOperation(value = "模块列表", notes = "查询全部的模块列表")
+    @ApiOperation(value = "模块列表", notes = "查询全部的模块列表.默认：page=1，size=10")
     @GetMapping("/a/modules")
-    public ResultBean getModules(@RequestParam(name = "page") Integer page,
-                                 @RequestParam(name = "size") Integer size) {
+    public ResultBean getModules(@RequestParam(name = "page",required = false) Integer page,
+                                 @RequestParam(name = "size",required = false) Integer size) {
         log.info("--------------进入ModuleController.getRoles--------------");
         if (page == null || page < ONE) {
             page = START_PAGE;
@@ -74,7 +56,7 @@ public class ModuleController {
         return resultBean;
     }
 
-    @ApiOperation(value = "批量获取模块信息", notes = "根据ids=[1][2][3][4][6][8][...]获取模块id=1,2,3,4,6,8的模块信息")
+    @ApiOperation(value = "批量获取模块信息", notes = "根据ids=[1][2][3][4][6][8][...]获取模块id=1,2,3,4,6,8的模块信息。默认：page=1，size=10")
     @GetMapping("/a/modules/list")
     public ResultBean getModulebyIds(@RequestParam(name = "ids", required = false) Long[] ids,
                                      @RequestParam(name = "page", required = false) Integer page,
@@ -98,9 +80,14 @@ public class ModuleController {
         if (size == null || size < ONE) {
             size = START_SIZE;
         }
+
         int start = PageUtil.getStart(page, size);
         log.info(Arrays.toString(ids));
-        return moduleService.getModulesByIds(ids, start, size);
+        ResultBean resultBean=moduleService.getModulesByIds(ids, start, size);
+        if (!PublicUtility.isNullOrEmpty(resultBean.getData())){
+            ((PageBean) resultBean).setPageNum(page);
+        }
+        return resultBean;
     }
 
 
@@ -147,12 +134,6 @@ public class ModuleController {
         log.info("--------------进入ModuleController.putModule--------------");
         if (PublicUtility.isNullOrEmpty(module)) {
             return new ResultBean(641);
-        }
-        if (PublicUtility.strIsEmpty(module.getName())) {
-            return new ResultBean(642);
-        }
-        if (PublicUtility.numIsEmpty(module.getParentId())) {
-            module.setParentId(PARENT);
         }
         Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         module.setId(id);

@@ -51,6 +51,7 @@ public class RoleServiceImpl implements RoleService {
         if (totalRecord < ONE) {
             return new PageBean(665);
         }
+
         List<Role> roles = roleMapper.selectRoles(start, size);
         return new PageBean<List<Role>>(200, size, totalRecord, roles);
     }
@@ -65,10 +66,10 @@ public class RoleServiceImpl implements RoleService {
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
         List<Role> roles = roleMapper.selectByIds(map);
-        int totalRecord = roles.size();
-        if (totalRecord < ONE) {
+        if (PublicUtility.isNullOrEmpty(roles)){
             return new PageBean(665);
         }
+        int totalRecord = roles.size();
         //判断总数是否小于或者等于size，如果是不用在去查了
         if (totalRecord <= size) {
             log.info("判断总数是否小于或者等于size，如果是不用在去查了");

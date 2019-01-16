@@ -1,6 +1,6 @@
 package com.academy.core.dto;
 
-public class ResultBean<T> implements Result {
+public class ResultBean<T>  {
     private Integer code;
     private String message;
     private T data;

@@ -98,7 +98,6 @@
                 update_at=#{updateAt}
             </if>
         </trim>
-        order by update_at desc
     </select>
 
 

@@ -13,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static com.academy.core.constant.Constant.*;
 
@@ -41,7 +38,7 @@ public class RoleController {
         return roleService.getRole(id);
     }
 
-    @ApiOperation(value = "角色列表", notes = "查询出角色的列表")
+    @ApiOperation(value = "角色列表", notes = "查询出角色的列表,默认：page=1，size=10")
     @GetMapping("/a/roles")
     public ResultBean getRoles(@RequestParam(name = "page", required = false) Integer page,
                                @RequestParam(name = "size", required = false) Integer size) {
@@ -61,7 +58,7 @@ public class RoleController {
         return resultBean;
     }
 
-    @ApiOperation(value = "增加角色", notes = "创建角色")
+    @ApiOperation(value = "增加角色", notes = "创建角色，角色名不能为null，角色的权限信息是选择的模块id转化成的JSON字符串发送给我的")
     @PostMapping("/a/role")
     public ResultBean addRole(HttpServletRequest request, @RequestBody Role role) {
         log.info("--------------进入RoleController.addRole--------------");
@@ -69,8 +66,6 @@ public class RoleController {
             return new ResultBean(661);
         }
         if (PublicUtility.strIsEmpty(role.getName())) {
-            System.out.println(12122);
-            System.out.println(12122);
             return new ResultBean(662);
         }
         if (PublicUtility.strIsEmpty(role.getStatus())) {
@@ -93,10 +88,6 @@ public class RoleController {
         if (PublicUtility.isNullOrEmpty(role)) {
             return new ResultBean(661);
         }
-        if (PublicUtility.strIsEmpty(role.getName())) {
-            return new ResultBean(662);
-        }
-
         Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         role.setId(id);
         role.setUpdateBy(managerId);

@@ -18,7 +18,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.academy.core.util.Constant.MANAGER_ID;
+import static com.academy.core.constant.Constant.MANAGER_ID;
+
 
 /**
  * @author Joe

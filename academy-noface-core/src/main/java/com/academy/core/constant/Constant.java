@@ -7,9 +7,16 @@ public class Constant {
     public static final Long PARENT=0L;
     public static final Integer ZERO=0;
     public static final Integer ONE=1;
+    public static final Integer EIGHT =8;
+    public static final Integer SEVEN =7;
+
 
     public static final Integer START_PAGE=1;
     public static final Integer START_SIZE=10;
+    public static final Integer BANAGER_SIZE=8;
+
+    public static final Integer PUTAWAY=1;
+    public static final Integer SOLD_OUT=2;
 
 
     /**
@@ -60,5 +67,19 @@ public class Constant {
      * Modle常量表
      */
     public static final String TYPE="web";
-
+    public static final Integer INSERT=1;
+    public static final Integer DEL=1;
+    /**
+     * article常量
+     */
+    //点赞
+    public static final Integer LIKE=1;
+    //收藏
+    public static final Integer COLLECTION=2;
+    //增加判断
+    public static final Integer ADD_ARTICLE=1;
+    //更新判断
+    public static final Integer PUT_ARTICLE=1;
+    public static final Integer BANNER=1;
+    public static final Integer CARD=2;
 }

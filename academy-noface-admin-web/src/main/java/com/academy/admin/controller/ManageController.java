@@ -33,7 +33,7 @@ public class ManageController {
      */
     @ApiOperation(value = "登录", notes = "登录成功后返回Access_token,Access_token放在请求头")
     @PostMapping("/login")
-    public Result login(@RequestParam("name") String name,
+    public ResultBean login(@RequestParam("name") String name,
                         @RequestParam("pwd") String pwd) {
         return managerService.getManagerInfo(name, pwd);
 
@@ -56,7 +56,7 @@ public class ManageController {
     }
 
 
-    @ApiOperation(value = "管理员列表", notes = "根据条件的不同返回满足条件的管理列表")
+    @ApiOperation(value = "管理员列表", notes = "根据条件的不同返回满足条件的管理列表。默认查询的是全部数据，默认：page=1，size=10")
     @GetMapping("/a/manager/search")
     public ResultBean getManagers(@RequestParam(name = "name", required = false) String name,
                                   @RequestParam(name = "roleId", required = false) Long roleId,
@@ -80,7 +80,7 @@ public class ManageController {
     }
 
 
-    @ApiOperation(value = "新增管理员", notes = "创建一个账号")
+    @ApiOperation(value = "新增管理员", notes = "创建一个账号:密码，姓名，角色id不能为null，默认：statu=using")
     @PostMapping("/a/manager")
     public ResultBean addManager(HttpServletRequest request, @RequestBody Manager manager) {
         log.info("--------------进入ManageController.addManager--------------");
@@ -139,7 +139,7 @@ public class ManageController {
     }
 
 
-    @ApiOperation(value = "修改密码", notes = "输入新密码和旧密码进行修改")
+    @ApiOperation(value = "修改密码", notes = "输入新密码和旧密码进行修改，新密码和旧密码不能相同")
     @PutMapping("/a/pwd")
     public ResultBean putPwd(HttpServletRequest request,
                              @RequestParam(name = "newPwd") String newPwd,
@@ -158,7 +158,6 @@ public class ManageController {
         manager.setUpdateBy(managerId);
         manager.setUpdateAt(System.currentTimeMillis());
         manager.setPwd(BPwdEncoderUtils.BCryptPassword(newPwd));
-
 
         return new ResultBean(200);
     }

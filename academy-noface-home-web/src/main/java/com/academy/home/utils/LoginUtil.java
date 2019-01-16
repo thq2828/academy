@@ -1,8 +1,5 @@
 package com.academy.home.utils;
 
-import org.apache.http.Header;
-import org.apache.http.HttpRequest;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class LoginUtil {
