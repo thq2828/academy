@@ -8,10 +8,12 @@ import com.academy.core.service.ArticleService;
 import com.academy.core.util.PublicUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +134,7 @@ public class ArticleServiceImpl implements ArticleService {
         return new ResultBean(200);
     }
 
+
     @Override
     public ResultBean putArticle(@RequestBody Article article) {
         log.info("-------------进入ArticleServiceImpl.putArticle-----------");
@@ -161,29 +164,30 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleMapper.selectByPrimaryKey(id);
             Integer like = article.getLike() + 1;
             article.setLike(like);
-            int i =articleMapper.updateByPrimaryKeyWithBLOBs(article);
-            if (i<ONE){
+            int i = articleMapper.updateByPrimaryKeyWithBLOBs(article);
+            if (i < ONE) {
                 log.info("点赞或者收藏总数没有更新");
                 //设即到事务还没解决
-                articleMapper.delUserArticle(type,userId,id);
+                articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
 
             }
         }
         if (type == COLLECTION) {
             Article article = articleMapper.selectByPrimaryKey(id);
-            Integer collection = article.getCollection()+ 1;
+            Integer collection = article.getCollection() + 1;
             article.setCollection(collection);
-            int i =articleMapper.updateByPrimaryKeyWithBLOBs(article);
-            if (i<ONE){
+            int i = articleMapper.updateByPrimaryKeyWithBLOBs(article);
+            if (i < ONE) {
                 log.info("点赞或者收藏总数没有更新");
                 //设即到事务还没解决
-               articleMapper.delUserArticle(type,userId,id);
+                articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
             }
         }
         return new ResultBean(200);
     }
+
 
     @Override
     public ResultBean delArticleLike(@RequestParam(name = "userId") Long userId,
@@ -205,31 +209,31 @@ public class ArticleServiceImpl implements ArticleService {
         }
         if (type == LIKE) {
             Article article = articleMapper.selectByPrimaryKey(id);
-            Integer like = article.getLike() -1;
-            article.setCollection(like);
-            int n =articleMapper.updateByPrimaryKeyWithBLOBs(article);
-            if (n<ONE){
+            Integer like = article.getLike() - 1;
+            article.setLike(like);
+            int n = articleMapper.updateByPrimaryKeyWithBLOBs(article);
+            if (n < ONE) {
                 log.info("点赞或者收藏总数没有更新");
                 //设即到事务还没解决
-               articleMapper.delUserArticle(type,userId,id);
+                articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
-
             }
         }
         if (type == COLLECTION) {
             Article article = articleMapper.selectByPrimaryKey(id);
-            Integer collection = article.getCollection()-1;
-            article.setLike(collection);
-            int n =articleMapper.updateByPrimaryKeyWithBLOBs(article);
-            if (n<ONE){
+            Integer collection = article.getCollection() - 1;
+            article.setCollection(collection);
+            int n = articleMapper.updateByPrimaryKeyWithBLOBs(article);
+            if (n < ONE) {
                 log.info("点赞或者收藏总数没有更新");
                 //设即到事务还没解决
-                articleMapper.delUserArticle(type,userId,id);
+                articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
             }
         }
         return new ResultBean(200);
     }
+
 
     @Override
     public ResultBean putArticleStatus(@RequestBody Article article) {
@@ -268,7 +272,6 @@ public class ArticleServiceImpl implements ArticleService {
                 }
                 return new ResultBean(615);
             }
-
         }
         int i = articleMapper.updateByPrimaryKeyWithBLOBs(article);
         if (i < PUTAWAY) {
