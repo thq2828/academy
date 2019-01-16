@@ -160,6 +160,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (j < ONE) {
             return new ResultBean(201);
         }
+        ResultBean resultBean =new ResultBean(200);
         if (type == LIKE) {
             Article article = articleMapper.selectByPrimaryKey(id);
             Integer like = article.getLike() + 1;
@@ -170,8 +171,8 @@ public class ArticleServiceImpl implements ArticleService {
                 //设即到事务还没解决
                 articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
-
             }
+            resultBean.setData(like);
         }
         if (type == COLLECTION) {
             Article article = articleMapper.selectByPrimaryKey(id);
@@ -184,8 +185,9 @@ public class ArticleServiceImpl implements ArticleService {
                 articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
             }
+            resultBean.setData(collection);
         }
-        return new ResultBean(200);
+        return resultBean;
     }
 
 
@@ -196,17 +198,17 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("-------------进入ArticleServiceImpl.delArticleLike-----------");
         log.info("type:{},id:{},userId{}", type, id, userId);
         int count = articleMapper.selectUserAndArticleByCount(type, userId, id);
-        System.out.println(count);
         if (count < ONE) {
             log.info("没有点赞和取消状态");
             return new ResultBean(617);
         }
+
         int i = articleMapper.delUserArticle(type, userId, id);
-        System.out.println(i);
         if (i < ONE) {
             log.info("取消点赞失败！");
             return new ResultBean(618);
         }
+        ResultBean resultBean =new ResultBean(200);
         if (type == LIKE) {
             Article article = articleMapper.selectByPrimaryKey(id);
             Integer like = article.getLike() - 1;
@@ -218,6 +220,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
             }
+            resultBean.setData(like);
         }
         if (type == COLLECTION) {
             Article article = articleMapper.selectByPrimaryKey(id);
@@ -230,8 +233,9 @@ public class ArticleServiceImpl implements ArticleService {
                 articleMapper.delUserArticle(type, userId, id);
                 return new ResultBean(201);
             }
+            resultBean.setData(collection);
         }
-        return new ResultBean(200);
+        return resultBean;
     }
 
 
