@@ -21,6 +21,12 @@ public class Video implements Serializable {
     public static final Integer INTRO_LENGTH = 140;
     public static final String VIDEO_FORMAT = "MP4";
 
+    public static final String VIDEO_PIC_PATH = "/video/";
+
+    public static final String PIC_PNG = "PNG";
+    public static final String PIC_JPG = "JPG";
+
+
     /**
      * 自增id
      */

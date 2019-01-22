@@ -49,4 +49,5 @@ public class UserServiceImpl implements UserService {
                                       @RequestParam(value = "address", required = false) String address) {
        return userMapper.listUserByQuery(nick, id, grade, phone, email, status, beanFrom, beanTo, address);
     }
+
 }

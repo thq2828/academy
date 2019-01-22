@@ -12,7 +12,7 @@
     <parameterMap id="Code" type="com.academy.core.pojo.Code"/>
 
     <sql id="Base_Column_List">
-        id, info, `number`, create_at
+        id, info, `number`, create_at, update_at
     </sql>
 
     <select id="findByInfo" resultMap="BaseResultMap">

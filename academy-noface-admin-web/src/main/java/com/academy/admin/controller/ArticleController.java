@@ -3,19 +3,25 @@ package com.academy.admin.controller;
 import com.academy.core.dto.PageBean;
 import com.academy.core.dto.ResultBean;
 import com.academy.core.pojo.Article;
+import com.academy.core.pojo.Response;
+import com.academy.core.pojo.Video;
 import com.academy.core.service.ArticleService;
 import com.academy.core.util.AccessTokenUtil;
 import com.academy.core.util.PageUtil;
 import com.academy.core.util.PublicUtility;
+import com.academy.core.util.UploadPicUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.academy.core.constant.Constant.*;
 
@@ -168,5 +174,25 @@ public class ArticleController {
         article.setUpdateAt(System.currentTimeMillis());
         article.setId(id);
         return articleService.putArticleStatus(article);
+    }
+
+    /**
+     * 图片上传
+     */
+    @PostMapping("/a/u/article/pic")
+    public Response upload(@RequestParam(value = "pic") MultipartFile pic, HttpServletRequest request) {
+        try{
+            String[] fileArray = Objects.requireNonNull(pic.getOriginalFilename()).split("[.]");
+            String picSuff = fileArray[fileArray.length - 1];
+            if(!picSuff.toUpperCase().equals(Video.PIC_PNG) && !picSuff.toUpperCase().equals(Video.PIC_JPG)) {
+                log.info("图片格式不正确");
+                return new Response<>(-1, "图片格式不正确", picSuff);
+            }
+            String result = UploadPicUtil.upload(pic.getInputStream(), Video.VIDEO_PIC_PATH, picSuff);
+            return new Response<>(0, "success", result);
+        }catch (IOException e) {
+            log.info("上传图片失败");
+            return new Response<>(-1, "上传图片失败", null);
+        }
     }
 }

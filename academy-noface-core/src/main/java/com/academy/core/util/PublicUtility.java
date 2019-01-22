@@ -1,5 +1,7 @@
 package com.academy.core.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Collection;
 import java.util.Map;
 

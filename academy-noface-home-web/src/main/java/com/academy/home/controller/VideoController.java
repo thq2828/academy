@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -105,6 +108,22 @@ public class VideoController {
         return new Response<>(0, "sucess", video);
     }
 
+    @GetMapping("/a/u/video/student/collect")
+    public Response collectVideo(HttpServletRequest request) {
+        Long uid = LoginUtil.getUid(request);
+        log.info("查询用户收藏视频 uid = {}", uid);
+
+        List<Collect> collectList = collectService.findByVideoId(null, Collect.COLLECT, uid, null);
+        log.info("用户收藏视频 size = {}", collectList.size());
+        List<Long> ids = collectList.stream().map(Collect::getVideoId).collect(Collectors.toList());
+        List<Video> videoList = new ArrayList<>();
+        for (Long id : ids) {
+            Video video = videoService.findById(id);
+            videoList.add(video);
+        }
+        return new Response<>(0, "success", videoList);
+    }
+
     /**
      * 收藏
      */
@@ -126,20 +145,16 @@ public class VideoController {
             collect.setUserId(uid);
             collect.setVideoId(id);
             collectService.insert(collect);
-            System.out.println("+++++++++++++++++++++");
-            System.out.println(check);
             check.setCollect(check.getCollect() + 1);
-            System.out.println("=======================");
-            System.out.println(check);
             videoService.update(check);
-            return new Response<>(0, "success", id);
+            return new Response<>(0, "success", check);
         }else{
             log.info("取消收藏");
             // 删除一条关系记录
             collectService.delete(Collect.COLLECT, uid, id);
             check.setCollect(check.getCollect() - 1);
             videoService.update(check);
-            return new Response<>(0, "success", id);
+            return new Response<>(0, "success", check);
         }
     }
 
@@ -166,14 +181,14 @@ public class VideoController {
             collectService.insert(collect);
             check.setLike(check.getLike() + 1);
             videoService.update(check);
-            return new Response<>(0, "success", id);
+            return new Response<>(0, "success", check);
         }else{
             log.info("取消点赞");
             // 删除一条关系记录
             collectService.delete(Collect.LIKE, uid, id);
             check.setLike(check.getLike() - 1);
             videoService.update(check);
-            return new Response<>(0, "success", id);
+            return new Response<>(0, "success", check);
         }
     }
 

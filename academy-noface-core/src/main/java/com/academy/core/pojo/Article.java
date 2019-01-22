@@ -3,6 +3,11 @@ package com.academy.core.pojo;
 import java.util.Arrays;
 
 public class Article {
+    public static final String ARTICLE_PIC_PATH = "/video/";
+
+    public static final String PIC_PNG = "PNG";
+    public static final String PIC_JPG = "JPG";
+
 
     private Long id;
 
