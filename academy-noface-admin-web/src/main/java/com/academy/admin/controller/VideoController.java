@@ -1,22 +1,23 @@
 package com.academy.admin.controller;
 
-import com.academy.core.pojo.Response;
-import com.academy.core.pojo.Teacher;
-import com.academy.core.pojo.User;
-import com.academy.core.pojo.Video;
+import com.academy.core.pojo.*;
 import com.academy.core.service.TeacherService;
 import com.academy.core.service.VideoService;
 import com.academy.core.util.AccessTokenUtil;
+import com.academy.core.util.UploadPicUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static com.academy.core.constant.Constant.MANAGER_ID;
 
@@ -259,5 +260,25 @@ public class VideoController {
         teacherService.delete(id);
         log.info("删除成功");
         return new Response<>(0, "success", 2L);
+    }
+
+    /**
+     * 图片上传
+     */
+    @PostMapping("/a/u/video/pic")
+    public Response upload(@RequestParam(value = "pic") MultipartFile pic, HttpServletRequest request) {
+        try{
+            String[] fileArray = Objects.requireNonNull(pic.getOriginalFilename()).split("[.]");
+            String picSuff = fileArray[fileArray.length - 1];
+            if(!picSuff.toUpperCase().equals(Article.PIC_PNG) && !picSuff.toUpperCase().equals(Article.PIC_JPG)) {
+                log.info("图片格式不正确");
+                return new Response<>(-1, "图片格式不正确", picSuff);
+            }
+            String result = UploadPicUtil.upload(pic.getInputStream(), Article.ARTICLE_PIC_PATH, picSuff);
+            return new Response<>(0, "success", result);
+        }catch (IOException e) {
+            log.info("上传图片失败");
+            return new Response<>(-1, "上传图片失败", null);
+        }
     }
 }

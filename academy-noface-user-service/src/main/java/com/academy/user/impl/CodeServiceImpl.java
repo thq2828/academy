@@ -26,6 +26,7 @@ public class CodeServiceImpl implements CodeService {
         }else {
             check.setInfo(code.getInfo());
             check.setNumber(code.getNumber());
+            check.setUpdateAt(System.currentTimeMillis());
             codeMapper.update(check);
         }
     }

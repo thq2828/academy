@@ -5,12 +5,14 @@ import com.academy.core.pojo.Response;
 import com.academy.core.pojo.User;
 import com.academy.core.service.CodeService;
 import com.academy.core.service.UserService;
+import com.academy.core.util.UploadPicUtil;
 import com.academy.home.utils.EmailUtil;
 import com.academy.home.utils.LoginUtil;
 import com.academy.home.utils.MsgUtil;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.print.attribute.standard.NumberUp;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -213,5 +216,22 @@ public class UserController {
         log.info("获取用户信息 uid = {}", uid);
         User user = userService.findById(uid);
         return new Response<>(0, "success", user);
+    }
+
+    @PostMapping("/a/u/student/pic")
+    public Response upload(@RequestParam(value = "pic") MultipartFile pic, HttpServletRequest request) {
+        try{
+            String[] fileArray = Objects.requireNonNull(pic.getOriginalFilename()).split("[.]");
+            String picSuff = fileArray[fileArray.length - 1];
+            if(!picSuff.toUpperCase().equals(User.PIC_PNG) && !picSuff.toUpperCase().equals(User.PIC_JPG)) {
+                log.info("图片格式不正确");
+                return new Response<>(-1, "图片格式不正确", picSuff);
+            }
+            String result = UploadPicUtil.upload(pic.getInputStream(), User.USR_PIC_PATH, picSuff);
+            return new Response<>(0, "success", result);
+        }catch (IOException e) {
+            log.info("上传图片失败");
+            return new Response<>(-1, "上传图片失败", null);
+        }
     }
 }

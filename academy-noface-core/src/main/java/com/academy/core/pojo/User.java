@@ -23,6 +23,10 @@ public class User implements Serializable {
     public static final Integer SUBJECT_LOW = 1;
     public static final Integer SUBJECT_HIGH = 9;
 
+    public static final String USR_PIC_PATH = "/user/";
+
+    public static final String PIC_PNG = "PNG";
+    public static final String PIC_JPG = "JPG";
 
     /**
      * 自增id
