@@ -12,7 +12,7 @@ public interface VideoMapper {
 
     List<Video> listVideoByQuery(@Param("title") Integer title, @Param("type") Integer type,
                                  @Param("grade") Integer grade, @Param("subject") Integer subject,
-                                 @Param("likeFrom") String likeFrom, @Param("likeTo") String likeTo,
+                                 @Param("likeFrom") Integer likeFrom, @Param("likeTo") Integer likeTo,
                                  @Param("collectFrom") Integer collectFrom, @Param("collectTo") Integer collectTo,
                                  @Param("teacherId") Long teacherId, @Param("status") Integer status);
 
