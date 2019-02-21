@@ -41,7 +41,7 @@ public class ArticleController {
                                   @RequestParam(name = "author", required = false) String author,
                                   @RequestParam(name = "category", required = false) Integer category,
                                   @RequestParam(name = "status", required = false) Integer status,
-                                  @RequestParam(name = "E", required = false) Integer starLike,
+                                  @RequestParam(name = "starLike", required = false) Integer starLike,
                                   @RequestParam(name = "endLike", required = false) Integer endLike,
                                   @RequestParam(name = "startCollection", required = false) Integer startCollection,
                                   @RequestParam(name = "endCollection", required = false) Integer endCollection,

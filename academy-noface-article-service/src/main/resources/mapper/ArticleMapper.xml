@@ -65,7 +65,7 @@
                 and love between #{starLike} and #{endLike}
             </if>
             <if test="startCollection != null and endCollection != null">
-                or collection between #{startCollection} and #{endCollection}
+                and collection between #{startCollection} and #{endCollection}
             </if>
             <if test="status != null">
                 and status=#{status}

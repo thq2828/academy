@@ -68,10 +68,8 @@ public class ArticleMapperTest {
     @Test
     public void selectBySelective() {
         Map<String,Object> map =new HashMap<>();
-        map.put("starLike",70);
-        map.put("endLike",90);
-        map.put("startCollection",110);
-        map.put("endCollection",120);
+        map.put("title","阿里山");
+        //map.put("status",2);
 
         System.out.println(articleMapper.selectBySelective(map));
 

@@ -158,8 +158,7 @@ public class ManageController {
         manager.setUpdateBy(managerId);
         manager.setUpdateAt(System.currentTimeMillis());
         manager.setPwd(BPwdEncoderUtils.BCryptPassword(newPwd));
-
-        return new ResultBean(200);
+        return managerService.putPwd(manager);
     }
 
 }
