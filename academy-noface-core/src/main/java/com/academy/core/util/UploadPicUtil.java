@@ -19,7 +19,7 @@ public class UploadPicUtil {
         }
         downloadFile.close();
         inputStream.close();
-        return User.USR_PIC_PATH + current + "." + fileType;
+        return filePath + current + "." + fileType;
     }
 
 }
