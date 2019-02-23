@@ -66,7 +66,7 @@ public class UserController {
      */
     @PutMapping("/a/u/user/status/{id}")
     public Response updateStatus(@PathVariable("id") Long id, HttpServletRequest request) {
-         Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
+         Long uid = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         log.info("用户上下架 id = {}, uid = {}", id, uid);
         User user = userService.findById(id);
         if(user == null) {

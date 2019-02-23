@@ -33,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(@RequestBody User user) {
+        user.setPhone("");
+        user.setEmail("");
+        user.setAddress("");
         user.setUpdateAt(System.currentTimeMillis());
         userMapper.updateUser(user);
     }

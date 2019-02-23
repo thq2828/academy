@@ -104,7 +104,7 @@
         from `user`
         <where>
             <if test="nick != null">
-                and nick = #{nick}
+                and nick like CONCAT(CONCAT('%', #{nick}), '%')
             </if>
             <if test="id != null">
                 and id = #{id}
@@ -113,10 +113,10 @@
                 and grade = #{grade}
             </if>
             <if test="phone != null">
-                and phone = #{phone}
+                and phone like CONCAT(CONCAT('%', #{phone}), '%')
             </if>
             <if test="email != null">
-                and email = #{email}
+                and email like CONCAT(CONCAT('%', #{email}), '%')
             </if>
             <if test="status != null">
                 and status = #{status}
@@ -128,7 +128,7 @@
                 and beanTo <![CDATA[ <= ]]> #{beanTo}
             </if>
             <if test="address != null">
-                and address = #{address}
+                and address like CONCAT(CONCAT('%', #{address}), '%')
             </if>
         </where>
         order by create_at desc
