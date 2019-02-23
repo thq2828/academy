@@ -36,8 +36,9 @@ public class ModuleMapperTest {
     @Test
     public void selectModules() {
         Map<String,Object> map =new HashMap<>();
-        //map.put("name","后台管理");
-        //map.put("url","main.article");
+        map.put("id",1);
+        map.put("name","后台管理");
+        map.put("url","main.article");
         System.out.println("---------------+"+moduleMapper.selectModules(map).size()+"............................");
     }
 

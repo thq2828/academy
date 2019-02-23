@@ -34,7 +34,10 @@
                 NAME = #{name} or
             </if>
             <if test="url != null">
-                url = #{url}
+                url = #{url} and
+            </if>
+            <if test="id !=null">
+                id<![CDATA[ != ]]>#{id} and
             </if>
             <if test="create_by !=null">
                 create_by=#{createBy} and

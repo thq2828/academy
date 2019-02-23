@@ -27,8 +27,8 @@ public class ModuleServiceImpl implements ModuleService {
     private ModuleMapper moduleMapper;
 
     @Override
-    public PageBean getModules(@RequestParam(name = "start")Integer start,
-                               @RequestParam(name = "size")Integer size) {
+    public PageBean getModules(@RequestParam(name = "start") Integer start,
+                               @RequestParam(name = "size") Integer size) {
         log.info("----------------------ModuleServiceImpl.getModules-------------------");
         log.info("start:" + start + ",size:" + size);
         Map<String, Object> map = new HashMap<>();
@@ -44,13 +44,13 @@ public class ModuleServiceImpl implements ModuleService {
         map.put("start", start);
         map.put("size", size);
         modules = moduleMapper.selectModules(map);
-        return new PageBean<List<Module>>(200,size, totalRecord, modules);
+        return new PageBean<List<Module>>(200, size, totalRecord, modules);
     }
 
     @Override
-    public PageBean getModulesByIds(@RequestParam(name = "ids")Long[] ids,
-                                    @RequestParam(name = "start")Integer start,
-                                    @RequestParam(name = "size")Integer size) {
+    public PageBean getModulesByIds(@RequestParam(name = "ids") Long[] ids,
+                                    @RequestParam(name = "start") Integer start,
+                                    @RequestParam(name = "size") Integer size) {
         log.info("----------------------进入进入ModuleServiceImpl.getModulesByIds-------------------");
         log.info("ids:" + ids + ",start:" + start + ",size:" + size);
         Map<String, Object> map = new HashMap<>();
@@ -73,7 +73,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public ResultBean getModule(@RequestParam(name = "id")Long id) {
+    public ResultBean getModule(@RequestParam(name = "id") Long id) {
         log.info("----------------------进入进入ModuleServiceImpl.getModule-------------------");
         log.info("id:" + id);
         Module module = moduleMapper.selectByPrimaryKey(id);
@@ -124,7 +124,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public ResultBean delModule(@RequestParam(name = "id")Long id) {
+    public ResultBean delModule(@RequestParam(name = "id") Long id) {
         log.info("----------------------进入进入ModuleServiceImpl.delModule-------------------");
         log.info(id.toString());
         int i = moduleMapper.deleteByPrimaryKey(id);
