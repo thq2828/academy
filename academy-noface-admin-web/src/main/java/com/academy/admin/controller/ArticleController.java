@@ -147,6 +147,7 @@ public class ArticleController {
         if (id == null) {
             return new ResultBean(206);
         }
+
         //加入创建者id
         Long managerId = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         article.setUpdateBy(managerId);
@@ -188,7 +189,7 @@ public class ArticleController {
                 log.info("图片格式不正确");
                 return new Response<>(-1, "图片格式不正确", picSuff);
             }
-            String result = UploadPicUtil.upload(pic.getInputStream(), Video.VIDEO_PIC_PATH, picSuff);
+            String result = UploadPicUtil.upload(pic.getInputStream(), Article.ARTICLE_PIC_PATH, picSuff);
             return new Response<>(0, "success", result);
         }catch (IOException e) {
             log.info("上传图片失败");

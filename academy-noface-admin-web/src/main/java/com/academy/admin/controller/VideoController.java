@@ -88,7 +88,7 @@ public class VideoController {
      */
     @PostMapping("/a/u/video")
     public Response add(@RequestBody Video video, HttpServletRequest request) {
-        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
+        Long uid = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         log.info("新增视频 uid = {}", uid);
         Integer type = video.getType();
         if(type == null) {
@@ -142,7 +142,7 @@ public class VideoController {
      */
     @PutMapping("/a/u/video/{id}")
     public Response update(@PathVariable("id") Long id, @RequestBody Video video, HttpServletRequest request) {
-        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
+        Long uid = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         log.info("编辑视频 id = {}, uid = {}", id, uid);
         Video check = videoService.findById(id);
         if(check==null){
@@ -211,7 +211,7 @@ public class VideoController {
      */
     @PutMapping("/a/u/video/status/{id}")
     public Response updateStatus(@PathVariable("id") Long id, HttpServletRequest request) {
-        Long uid = (Long) AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID);
+        Long uid = Long.valueOf(AccessTokenUtil.getAccessTokeValues(request, MANAGER_ID).toString());
         log.info("视频上下架 id = {}， uid = {}", id, uid);
         Video check = videoService.findById(id);
         if(check == null) {
@@ -274,7 +274,7 @@ public class VideoController {
                 log.info("图片格式不正确");
                 return new Response<>(-1, "图片格式不正确", picSuff);
             }
-            String result = UploadPicUtil.upload(pic.getInputStream(), Article.ARTICLE_PIC_PATH, picSuff);
+            String result = UploadPicUtil.upload(pic.getInputStream(), Video.VIDEO_PIC_PATH, picSuff);
             return new Response<>(0, "success", result);
         }catch (IOException e) {
             log.info("上传图片失败");
