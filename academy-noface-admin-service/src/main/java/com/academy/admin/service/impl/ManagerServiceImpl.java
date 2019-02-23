@@ -108,7 +108,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public ResultBean putManager(@RequestBody Manager manager) {
         log.info("----------------------进入进入ManagerServiceImpl.putManager-------------------");
-        Manager manager1 = managerMapper.selectByName(manager.getName());
+        Manager manager1 = managerMapper.selectByName1(manager.getName(),manager.getId());
         if (!PublicUtility.isNullOrEmpty(manager1)) {
             return new ResultBean(629);
         }

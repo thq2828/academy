@@ -45,6 +45,7 @@ public interface ManagerMapper {
      * @return
      */
     Manager selectByName(@Param("name") String name);
+    Manager selectByName1(@Param("name") String name,@Param("id")Long id);
 
     /**
      * 动态查询数据

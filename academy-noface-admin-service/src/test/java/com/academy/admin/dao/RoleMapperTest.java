@@ -71,6 +71,6 @@ public class RoleMapperTest {
 
     @Test
     public void selectByName() {
-        System.out.println(roleMapper.selectByName("测试"));
+        System.out.println(roleMapper.selectByName1("管理页",5L));
     }
 }

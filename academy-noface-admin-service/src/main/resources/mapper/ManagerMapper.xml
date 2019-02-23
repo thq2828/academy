@@ -33,6 +33,12 @@
         from manager
         where name = #{name}
     </select>
+    <select id="selectByName1" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from manager
+        where name = #{name} and id<![CDATA[ != ]]>#{id}
+    </select>
 
     <!--动态查询数据-->
     <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">

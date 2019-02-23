@@ -55,7 +55,7 @@ public class ManagerMapperTest {
 
     @Test
     public void selectByName() {
-        System.out.println(managerMapper.selectByName("admin"));
+        System.out.println(managerMapper.selectByName1("admin1",67L));
     }
 
     @Test

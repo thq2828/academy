@@ -74,6 +74,12 @@
         from role
         where name=#{name}
     </select>
+    <select id="selectByName1"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from role
+        where name=#{name} and id<![CDATA[ != ]]>#{id}
+    </select>
     <!--**********插入一条数据**************-->
     <insert id="insert" parameterType="com.academy.core.pojo.Role">
     insert into role (id, name, status, 

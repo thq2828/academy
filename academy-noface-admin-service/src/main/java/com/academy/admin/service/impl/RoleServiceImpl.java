@@ -104,7 +104,7 @@ public class RoleServiceImpl implements RoleService {
     public ResultBean putRole(@RequestBody Role role) {
         log.info("----------------------进入进入RoleServiceImpl.putRole-------------------");
         //判断这个角色名是否存在
-        Role role1 = roleMapper.selectByName(role.getName());
+        Role role1 = roleMapper.selectByName1(role.getName(),role.getId());
         if (!PublicUtility.isNullOrEmpty(role1)) {
             return new ResultBean(666);
         }

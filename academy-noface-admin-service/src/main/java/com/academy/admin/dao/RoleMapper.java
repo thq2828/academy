@@ -54,6 +54,7 @@ public interface RoleMapper {
      * @return
      */
     Role selectByName(@Param("name") String name);
+    Role selectByName1(@Param("name") String name,@Param("id") Long id);
     /**
      * 批量获取角色详细信息
      */
