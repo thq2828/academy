@@ -36,10 +36,10 @@ public class ModuleMapperTest {
     @Test
     public void selectModules() {
         Map<String,Object> map =new HashMap<>();
-        map.put("id",1);
-        map.put("name","后台管理");
-        map.put("url","main.article");
-        System.out.println("---------------+"+moduleMapper.selectModules(map).size()+"............................");
+        map.put("id",7);
+        //map.put("name","视频列表");
+        map.put("url","videolist");
+        System.out.println(moduleMapper.selectModules(map));
     }
 
     @Test

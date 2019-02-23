@@ -28,16 +28,17 @@
         select
         <include refid="Base_Column_List"/>
         from module
-        <trim prefix="WHERE" suffixOverrides="AND|OR">
-            <if test="name != null">
-                <!--<bind name="name" value="'%'+name+'%'"/>-->
-                NAME = #{name} or
-            </if>
-            <if test="url != null">
-                url = #{url} and
-            </if>
+        <trim prefix="WHERE" suffixOverrides="AND|OR" prefixOverrides="AND">
+            <trim prefix="(" suffix=")" prefixOverrides="OR">
+                <if test="name != null">
+                    NAME = #{name}
+                </if>
+                <if test="url != null">
+                    or url = #{url}
+                </if>
+            </trim>
             <if test="id !=null">
-                id<![CDATA[ != ]]>#{id} and
+                and id<![CDATA[ != ]]>#{id} and
             </if>
             <if test="create_by !=null">
                 create_by=#{createBy} and
@@ -74,8 +75,8 @@
     </select>
 
     <!--<select id="selectBycount" resultType="int">-->
-        <!--select count(*)-->
-        <!--from module-->
+    <!--select count(*)-->
+    <!--from module-->
     <!--</select>-->
 
 
