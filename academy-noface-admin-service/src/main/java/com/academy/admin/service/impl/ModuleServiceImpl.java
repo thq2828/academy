@@ -111,6 +111,7 @@ public class ModuleServiceImpl implements ModuleService {
         Map<String, Object> map = new HashMap<>();
         map.put("name", module.getName());
         map.put("url", module.getUrl());
+        map.put("id",module.getId());
         List<Module> modules = moduleMapper.selectModules(map);
         if (!PublicUtility.isNullOrEmpty(modules)) {
             return new ResultBean(644);
